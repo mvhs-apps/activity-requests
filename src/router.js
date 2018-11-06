@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+
+import HomePage from './views/HomePage.vue'
+import AboutPage from './views/AboutPage.vue';
+import TrackPage from './views/TrackPage.vue';
+import ViewFormPage from './views/ViewFormPage.vue';
 
 Vue.use(Router)
 
@@ -11,17 +15,22 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: HomePage
     },
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: function () { 
-        return import(/* webpackChunkName: "about" */ './views/About.vue')
-      }
+      component: AboutPage
+    },
+    {
+      path: '/track',
+      name: 'track',
+      component: TrackPage
+    },
+    {
+      path: '/track/:id',
+      name: 'view-form',
+      component: ViewFormPage
     }
   ]
 })
