@@ -12,17 +12,17 @@ app.use(express.json());
 
 app.options('*', cors());
 app.use(cors({
-    origin(origin, callback) {
-        callback(null, true);
-    }
+	origin(origin, callback) {
+		callback(null, true);
+	}
 }));
 
 app.use('/api', routes);
 
 app.all('*', (req, res) => {
-    res.json(responses.error(404));
+	res.json(responses.error(404));
 });
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server started on port ${process.env.PORT}`);
+	console.log(`Server started on port ${process.env.PORT}`);
 });
