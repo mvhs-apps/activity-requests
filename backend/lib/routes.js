@@ -4,7 +4,7 @@ const router = require('express').Router();
 
 const responses = require('./responses');
 
-firebase.initializeApp(require('./firebase'));
+firebase.initializeApp(require('./firebase.json'));
 
 router.get('/get-request/:id', (req, res) => {
 	const id = req.params.id;
