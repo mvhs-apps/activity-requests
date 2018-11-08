@@ -2,16 +2,28 @@
 	<div>
 		<div v-if="isValidForm">
 			<div v-if="form.loaded === true">
-				<span>From id: <span style="display:inline; background: #ddd; padding: 6px 10px; border-radius: 4px;">{{ formId }}</span></span>
+				<span>From ID: <span style="display:inline; background: #ddd; padding: 6px 10px; border-radius: 4px;">{{ formId }}</span></span>
 				<span style="font-size: 40px; font-weight: bold;">{{ form.general.student_name }}</span>
 				<span>Student email: {{ form.general.student_email }}</span>
 				<span>Description: {{ form.general.event_description }}</span>
-
+				<span>Dates: {{ form.dates }}</span>
+				<br>
 				<div v-if="typeof form.fundraiser === 'object'" class="div-moved-in">
 					<h2>Fundraiser Details</h2>
 					<span>Fundraiser name: {{ form.fundraiser.fundraiser_name }}</span>
 
 					<!-- the different types of fundraisers -->
+					<div v-if="form.fundraiser.is_fundraiser === 'restaurant'" class="div-moved-in">
+						<h3>Restaurant Fundraiser</h3>
+						<span>Restaurant name: {{ form.fundraiser['restaurant-address'] }}</span>
+						<span>Restaurant address: {{ form.fundraiser['restaurant-name'] }}</span>
+					</div>
+					<div v-if="form.fundraiser.is_fundraiser === 'donation_drive'" class="div-moved-in">
+						<h3>Donation Drive Fundraiser</h3>
+						<span>Items to be collected: {{ form.fundraiser['donation_drive-items-to-be-collected'] }}</span>
+						<span>Organization recieving the items: {{ form.fundraiser['donation_drive-receiving-organization-information'] }}</span>
+						<span>How will items reach organization: {{ form.fundraiser['donation_drive-receiving-organization-delivery-plan'] }}</span>
+					</div>
 					<div v-if="form.fundraiser.is_fundraiser === 'food_sales'" class="div-moved-in">
 						<h3>Food Sales Fundraiser</h3>
 						<span>Product description: {{ form.fundraiser['food_sales-product-description'] }}</span>
@@ -20,15 +32,29 @@
 						<span>Expected income: ${{ form.fundraiser['food_sales-expected-income'] }}</span>
 						<span>Expected costs: ${{ form.fundraiser['food_sales-expected-costs'] }}</span>
 					</div>
-
-					<!-- TODO add other fundraiser types -->
+					<div v-if="form.fundraiser.is_fundraiser === 'product'" class="div-moved-in">
+						<h3>Non-Food Product Sales Fundraiser</h3>
+						<span>Product description: {{ form.fundraiser['product-product-description'] }}</span>
+						<span>Product expected selling price: ${{ form.fundraiser['product-expected-selling-price'] }}</span>
+						<span>Expected # of items sold: {{ form.fundraiser['product-expected-items-sold'] }}</span>
+						<span>Expected income: ${{ form.fundraiser['product-expected-income'] }}</span>
+						<span>Expected costs: ${{ form.fundraiser['product-expected-costs'] }}</span>
+					</div>
+					<div v-if="form.fundraiser.is_fundraiser === 'third_party_fundraiser'" class="div-moved-in">
+						<h3>Third-party/online Fundraiser</h3>
+						<span>Link to online fundraising page: {{ form.fundraiser['third_party_fundraiser-link'] }}</span>
+						<span>Agreed/signed with the following name: {{ form.fundraiser['third_party_fundraiser-e-signature'] }}</span>
+					</div>
 
 				</div>
 
 				<div v-if="typeof form.campus === 'object'" class="div-moved-in">
 					<h2>This activity will occur on campus</h2>
+					<span v-if="form.campus.setup_image">Setup Image: {{ form.campus.setup_image }}</span>
 					<div class="div-moved-in">
 						<h3>Location information</h3>
+						<span v-if="form.campus.location_on_campus">Location on campus: {{ form.campus.location_on_campus }}</span>
+						<br>
 						<span v-if="form.campus.cafeteria">-wants the cafeteria</span>
 						<span v-if="form.campus.classroom">-wants classroom(s)</span>
 						<div v-if="form.campus['classroom-extra-info']" class="div-moved-in" style="margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
@@ -37,6 +63,7 @@
 						<span v-if="form.campus.gym">-wants the gym</span>
 						<span v-if="form.campus.library">-wants the library</span>
 						<span v-if="form.campus.theater">-wants the theater</span>
+						<span v-if="form.campus.ccc">-wants the College and Career Center</span>
 					</div>
 					<div class="div-moved-in">
 						<h3>Desired equipment</h3>
@@ -78,9 +105,6 @@
 				window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
 				.then(res => res.json())
 				.then(res => {
-
-					console.log(res);
-
 					if (!res.success && res.error === 'no_form_exists') {
 						this.isValidForm = false;
 						return;
