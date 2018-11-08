@@ -3,9 +3,10 @@
 		<div id="nav">
 			<span @click="$router.push({ path: '/' })">MVHS Activity Requests</span>
 			<router-link to="/">Home</router-link>
-			<router-link to="/about">About</router-link>
+			<router-link to="/start-form">Form</router-link>
 			<router-link to="/track">Track Request</router-link>
 		</div>
+		<div style="height: 64px;"></div>
 		<div style="padding: 30px;">
 			<router-view/>
 		</div>
@@ -35,8 +36,12 @@
 		display: flex;
 		justify-content: flex-end;
 		height: 64px;
-		z-index: 10;
+		z-index: 100;
 		box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.23);
+		position: fixed;
+		top: 0;
+		width: 100%;
+		background: white;
 	}
 
 	#nav a {

@@ -86,7 +86,6 @@
 
 
 <script>
-
 	import { serverHost } from '@/constants';
 
 	export default {
