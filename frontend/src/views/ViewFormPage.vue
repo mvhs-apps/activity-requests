@@ -10,7 +10,7 @@
 				<span>Description: {{ form.general.event_description }}</span>
 				<span>Dates: {{ form.general.all_dates }}</span>
 				<br>
-				<div v-if="typeof form.fundraiser === 'object'" class="div-moved-in">
+				<div v-if="form.general.is_fundraiser === 'yes'" class="div-moved-in">
 					<h2>Fundraiser Details</h2>
 
 					<!-- the different types of fundraisers -->
@@ -49,7 +49,7 @@
 
 				</div>
 
-				<div v-if="typeof form.campus === 'object'" class="div-moved-in">
+				<div v-if="form.general.event_on_campus === 'yes'" class="div-moved-in">
 					<h2>This activity will occur on campus</h2>
 					<span v-if="form.campus.setup_image">Setup Image: {{ form.campus.setup_image }}</span>
 					<div class="div-moved-in">

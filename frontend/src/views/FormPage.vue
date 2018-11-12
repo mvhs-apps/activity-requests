@@ -38,7 +38,7 @@
                 <div class="text-input">
                     <span class="input-title" style="margin-bottom: 0;">Write a brief description of your event/fundraiser</span>
                     <span class="input-subtitle">Try to stay under 75 words</span>
-                    <textarea @click="e => e.target.classList.add('expanded')" class="text-input" placeholder="Write here" v-model="form.general.event_description"></textarea>
+                    <textarea @focus="e => e.target.classList.add('expanded')" class="text-input" placeholder="Write here" v-model="form.general.event_description"></textarea>
                     <span class="feedback" style="display: block; color: rgb(95, 95, 95);">{{ form.general.event_description.trim().split(' ').length }} word(s)</span>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <div class="text-input">
                     <span class="input-title" style="margin-bottom: 0;">Write all other dates (including times) of when your event will take place</span>
                     <span class="input-subtitle">Include the exact date, start time, and end time.</span>
-                    <textarea @click="e => e.target.classList.add('expanded')" class="text-input" placeholder="Write here" v-model="form.general.all_dates"></textarea>
+                    <textarea @focus="e => e.target.classList.add('expanded')" class="text-input" placeholder="Write here" v-model="form.general.all_dates"></textarea>
                 </div>
             </div>
             <div class="input-area">
@@ -114,7 +114,7 @@
                             <p class="hoverable"><i class="material-icons">help</i></p>
                             <div>Enter specific details including, but not limited to, room numbers and times.</div>
                         </div>
-                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.campus['classroom-extra-info']" placeholder="Write here"></textarea>
+                        <textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.campus['classroom-extra-info']" placeholder="Write here"></textarea>
                     </div>
                 </div>
                 <div class="md-checkbox">
@@ -243,7 +243,7 @@
                 <div class="input-area">
                     <div class="text-input">
                         <span class="input-title">What is the address of this restaurant?</span>
-                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['restaurant-address']" placeholder="Type here"></textarea>
+                        <textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.fundraiser['restaurant-address']" placeholder="Type here"></textarea>
                     </div>
                 </div>
             </div>
@@ -252,20 +252,20 @@
                     <div class="text-input">
                         <span class="input-title" style="margin-bottom: 0;">Please list the items to be collected</span>
                         <span class="input-subtitle">Enter specific details, if possible</span>
-                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-items-to-be-collected']" placeholder="Write here"></textarea>
+                        <textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-items-to-be-collected']" placeholder="Write here"></textarea>
                     </div>
                 </div>
                 <div class="input-area">
                     <div class="text-input">
                         <span class="input-title">Please list the name, address, and phone of the organization receiving the donation</span>
-                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-receiving-organization-information']" placeholder="Write here"></textarea>
+                        <textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-receiving-organization-information']" placeholder="Write here"></textarea>
                     </div>
                 </div>
                 <div class="input-area">
                     <div class="text-input">
                         <span class="input-title" style="margin-bottom: 0;">How will you deliver the items to the receiving organization?</span>
                         <span class="input-subtitle">If you plan to pay a driver, how will you raise money?</span>
-                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-receiving-organization-delivery-plan']" placeholder="Write here"></textarea>
+                        <textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-receiving-organization-delivery-plan']" placeholder="Write here"></textarea>
                     </div>
                 </div>
             </div>
@@ -279,7 +279,7 @@
                             What services will you purchase?<br>
                             What services will you provide?<br>
                         </span>
-                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['food_sales-product-description']" placeholder="Write here"></textarea>
+                        <textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.fundraiser['food_sales-product-description']" placeholder="Write here"></textarea>
                     </div>
                 </div>
                 <div class="input-area">
@@ -317,7 +317,7 @@
                             What services will you purchase?<br>
                             What services will you provide?<br>
                         </span>
-                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['product-product-description']" placeholder="Write here"></textarea>
+                        <textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.fundraiser['product-product-description']" placeholder="Write here"></textarea>
                     </div>
                 </div>
                 <div class="input-area">
@@ -364,12 +364,15 @@
             </div>
         </div>
 
-        <button id="submit-button">Submit this request</button>
+        <button id="submit-button" @click="submitForm()">Submit this request</button>
 
     </div>
 </template>
 
 <script>
+
+    import { serverHost } from '@/constants';
+
     export default {
         data() {
             return {
@@ -410,7 +413,15 @@
         },
         methods: {
             submitForm() {
-
+                window.fetch(`${serverHost}/api/submit-request`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'POST',
+                    body: JSON.stringify(this.form)
+                }).then(res => res.json()).then(res => {
+                    console.log(res);
+                });
             }
         },
         mounted() {

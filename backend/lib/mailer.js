@@ -5,7 +5,7 @@ module.exports = data => {
 
 	let { to, subject, html } = data;
 
-	if (!(to && from && subject)) {
+	if (!(to && subject)) {
 		throw 'missing_params';
 	}
 	
