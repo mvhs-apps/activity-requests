@@ -130,10 +130,238 @@
                     </div>
                 </div>
             </div>
+            <div class="input-area">
+                <div class="select-input">
+                    <span class="input-title" style="font-size: 22px;">Which part of campus most accurately describes the location of your event?</span>
+                    <div>
+                        <p class="hoverable"><i class="material-icons">help</i></p>
+                        <div>If your location is not listed, please select the closet available option.</div>
+                    </div>
+                    <select v-model="form.campus.location_on_campus">
+                        <option value="select_one" disabled>Select one</option>
+                        <option value="tennis_court_1">Tennis Court #1</option>
+                        <option value="tennis_court_2">Tennis Court #2</option>
+                        <option value="tennis_court_3">Tennis Court #3</option>
+                        <option value="tennis_court_4">Tennis Court #4</option>
+                        <option value="tennis_court_5">Tennis Court #5</option>
+                        <option value="tennis_court_6">Tennis Court #6</option>
+                        <option value="tennis_court_7">Tennis Court #7</option>
+                        <option value="tennis_court_8">Tennis Court #8</option>
+                        <option value="main_quad_1">Main Quad #1</option>
+                        <option value="main_quad_2">Main Quad #2</option>
+                        <option value="main_quad_3">Main Quad #3</option>
+                        <option value="main_quad_4">Main Quad #4</option>
+                        <option value="main_quad_5">Main Quad #5</option>
+                        <option value="quad_redwood_grove">Quad Redwood Grove</option>
+                        <option value="quad_theater_area">Quad Theater Area</option>
+                        <option value="science_quad">Science Quad</option>
+                        <option value="soccer_field_1">Soccer Field #1</option>
+                        <option value="soccer_field_2">Soccer Field #2</option>
+                        <option value="multi_use_field">Multi-Use Field</option>
+                        <option value="100_wing">100 Wing</option>
+                        <option value="200_wing">200 Wing</option>
+                        <option value="300_wing">300 Wing</option>
+                        <option value="400_wing">400 Wing</option>
+                        <option value="500_wing">500 Wing</option>
+                        <option value="600_wing">600 Wing</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-area">
+                <div class="checkbox-input">
+                    <span class="input-title">Please select desired equipment</span>
+                    <div class="md-checkbox">
+                        <input type="checkbox" v-model="form.campus.screens" id="screens-checkbox">
+                        <label for="screens-checkbox">Screens/projector</label>
+                    </div>
+                    <div class="input-area checkbox-extension" v-show="form.campus.screens">
+                        <div class="text-input">
+                            <span class="input-title" style="margin-bottom: 0;">Quantity of projector(s)/screen(s)</span>
+                            <span class="input-subtitle">Enter a number in the range 0 to 2</span>
+                            <input type="number" min="0" max="2" v-model="form.campus['screens-extra-info']" placeholder="Number here">
+                            <span class="feedback">Please enter a number in the range 0 to 2</span>
+                        </div>
+                    </div>
+                    <div class="md-checkbox">
+                        <input type="checkbox" v-model="form.campus.tables" id="tables-checkbox">
+                        <label for="tables-checkbox">Tables and/or chairs</label>
+                    </div>
+                    <div class="input-area checkbox-extension" v-show="form.campus.tables">
+                        <div class="text-input">
+                            <span class="input-title" style="margin-bottom: 0;">Quantity of tables/chairs</span>
+                            <span class="input-subtitle">Enter a number in the range 0 to 25</span>
+                            <input type="number" min="0" max="25" v-model="form.campus['tables-extra-info']" placeholder="Number here">
+                            <span class="feedback">Please enter a number in the range 0 to 25</span>
+                        </div>
+                    </div>
+                    <div class="md-checkbox">
+                        <input type="checkbox" v-model="form.campus.cashboxes" id="cashboxes-checkbox">
+                        <label for="cashboxes-checkbox">Cashboxes</label>
+                    </div>
+                    <div class="input-area checkbox-extension" v-show="form.campus.cashboxes">
+                        <div class="text-input">
+                            <span class="input-title" style="margin-bottom: 0;">How many cashboxes?</span>
+                            <span class="input-subtitle">Enter a number in the range 0 to 3</span>
+                            <input type="number" v-model="form.campus['cashboxes-extra-info']" placeholder="Number here">
+                            <span class="feedback">Please enter a number in the range 0 to 3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-area">
+                <div class="text-input">
+                    <span class="input-title" style="margin-bottom: 0;">Paste a link to your setup (optional)</span>
+                    <span class="input-subtitle">Upload an image/drawing to Google Drive, change the sharing settings to "anyone with a link," and paste the link here.</span>
+                    <input type="text" v-model="form.campus.setup_image" placeholder="Paste link here">
+                    <span class="feedback">Please enter a valid url</span>
+                </div>
+            </div>
         </div>
 
+        <span v-show="form.general.is_fundraiser === 'yes'" class="form-section-title">Fundraiser Questions</span>
         <div v-show="form.general.is_fundraiser === 'yes'" class="input-group">
-            <span class="form-section-title">Fundraiser Questions</span>
+            <div class="input-area">
+                <div class="select-input">
+                    <span class="input-title">Type of fundraiser</span>
+                    <select v-model="form.fundraiser.fundraiser_type">
+                        <option value="select_one" disabled>Select one</option>
+                        <option value="restaurant">Restaurant</option>
+                        <option value="donation_drive">Donation drive</option>
+                        <option value="food_sales">Food Sales</option>
+                        <option value="product">Non-Food Product Sale</option>
+                        <option value="third_party_fundraiser">Third-party/Online Fundraiser</option>
+                    </select>       
+                </div>
+            </div>
+            <div v-show="form.fundraiser.fundraiser_type === 'restaurant'">
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">What is the name of the restaurant?</span>
+                        <input type="text" v-model="form.fundraiser['restaurant-name']" placeholder="Type here">
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">What is the address of this restaurant?</span>
+                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['restaurant-address']" placeholder="Type here"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div v-show="form.fundraiser.fundraiser_type === 'donation_drive'">
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title" style="margin-bottom: 0;">Please list the items to be collected</span>
+                        <span class="input-subtitle">Enter specific details, if possible</span>
+                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-items-to-be-collected']" placeholder="Write here"></textarea>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Please list the name, address, and phone of the organization receiving the donation</span>
+                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-receiving-organization-information']" placeholder="Write here"></textarea>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title" style="margin-bottom: 0;">How will you deliver the items to the receiving organization?</span>
+                        <span class="input-subtitle">If you plan to pay a driver, how will you raise money?</span>
+                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['donation_drive-receiving-organization-delivery-plan']" placeholder="Write here"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div v-show="form.fundraiser.fundraiser_type === 'food_sales'">
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title" style="margin-bottom: 0;">Provide a thorough description of your product by answering the following</span>
+                        <span class="input-subtitle">
+                            What items will you purchase?<br>
+                            What items will you make?<br>
+                            What services will you purchase?<br>
+                            What services will you provide?<br>
+                        </span>
+                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['food_sales-product-description']" placeholder="Write here"></textarea>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Expected costs</span><br>
+                        $ <input type="number" style="display: inline;" v-model="form.fundraiser['food_sales-expected-costs']" placeholder="Enter a number">
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Expected # of items sold</span><br>
+                        <input type="number" v-model="form.fundraiser['food_sales-expected-items-sold']" placeholder="Enter a number">
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Expected selling price</span><br>
+                        $ <input type="number" style="display: inline;" v-model="form.fundraiser['food_sales-expected-selling-price']" placeholder="Enter a number">
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Expected income</span><br>
+                        $ <input type="number" style="display: inline;" v-model="form.fundraiser['food_sales-expected-income']" placeholder="Enter a number">
+                    </div>
+                </div>
+            </div>
+            <div v-show="form.fundraiser.fundraiser_type === 'product'">
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title" style="margin-bottom: 0;">Provide a thorough description of your product by answering the following</span>
+                        <span class="input-subtitle">
+                            What items will you purchase?<br>
+                            What items will you make?<br>
+                            What services will you purchase?<br>
+                            What services will you provide?<br>
+                        </span>
+                        <textarea class="text-input" @click="e => e.target.classList.add('expanded')" v-model="form.fundraiser['product-product-description']" placeholder="Write here"></textarea>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Expected costs</span><br>
+                        $ <input type="number" style="display: inline;" v-model="form.fundraiser['product-expected-costs']" placeholder="Enter a number">
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Expected items sold</span><br>
+                        <input type="number" v-model="form.fundraiser['product-expected-items-sold']" placeholder="Enter a number">
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Expected selling price</span><br>
+                        $ <input type="number" style="display: inline;" v-model="form.fundraiser['product-expected-selling-price']" placeholder="Enter a number">
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Expected income</span><br>
+                        $ <input type="number" style="display: inline;" v-model="form.fundraiser['product-expected-income']" placeholder="Enter a number">
+                    </div>
+                </div>
+            </div>
+            <div v-show="form.fundraiser.fundraiser_type === 'third_party_fundraiser'">
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title" style="margin-bottom: 0;">Paste a link to your online fundraising page</span>
+                        <span class="input-subtitle">Ex: Snap Raise, Go Fund Me, etc.</span>
+                        <input type="text" v-model="form.fundraiser['third_party_fundraiser-link']" placeholder="Paste link here">
+                        <span class="feedback">Please enter a valid url</span>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="text-input">
+                        <span class="input-title">Sign your name electronically to show that you agree to the following</span>
+                        <span class="input-subtitle" style="color: red; font-size: 15px;">I agree to a bunch of random legal stuff here</span>
+                        <input type="text" v-model="form.fundraiser['third_party_fundraiser-e-signature']" placeholder="First and last name">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -154,9 +382,24 @@
                         is_fundraiser: 'select_one'
                     },
                     campus: {
-
+                        gym: false,
+                        ccc: false,
+                        cafeteria: false,
+                        library: false,
+                        classroom: false,
+                        'classroom-extra-info': '',
+                        theater: false,
+                        location_on_campus: 'select_one',
+                        screens: false,
+                        'screens-extra-info': '',
+                        tables: false,
+                        'tables-extra-info': '',
+                        cashboxes: false,
+                        'cashboxes-extra-info': '',
+                        setup_image: 'https://'
                     },
                     fundraiser: {
+                        fundraiser_type: 'select_one',
 
                     }
                 }
@@ -213,6 +456,7 @@
         border-radius: 8px;
         border: 1px solid rgba(0,0,0,.1);
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+        border-left: 6px solid #fccb0b;
     }
 
     .text-input > div, .select-input > div {

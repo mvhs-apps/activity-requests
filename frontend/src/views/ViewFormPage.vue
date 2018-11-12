@@ -3,28 +3,29 @@
 		<div v-if="isValidForm">
 			<div v-if="form.loaded === true">
 				<span>From ID: <span style="display:inline; background: #ddd; padding: 6px 10px; border-radius: 4px;">{{ formId }}</span></span>
-				<span style="font-size: 40px; font-weight: bold;">{{ form.general.student_name }}</span>
+				<span style="font-size: 40px; font-weight: bold;">{{ form.general.activity_name }}</span>
+				<span>Student requester: {{ form.general.student_name }}</span>
 				<span>Student email: {{ form.general.student_email }}</span>
+				<span>Adult advisor email: {{ form.general.advisor_email }}</span>
 				<span>Description: {{ form.general.event_description }}</span>
-				<span>Dates: {{ form.dates }}</span>
+				<span>Dates: {{ form.general.all_dates }}</span>
 				<br>
 				<div v-if="typeof form.fundraiser === 'object'" class="div-moved-in">
 					<h2>Fundraiser Details</h2>
-					<span>Fundraiser name: {{ form.fundraiser.fundraiser_name }}</span>
 
 					<!-- the different types of fundraisers -->
-					<div v-if="form.fundraiser.is_fundraiser === 'restaurant'" class="div-moved-in">
+					<div v-if="form.fundraiser.fundraiser_type === 'restaurant'" class="div-moved-in">
 						<h3>Restaurant Fundraiser</h3>
 						<span>Restaurant name: {{ form.fundraiser['restaurant-address'] }}</span>
 						<span>Restaurant address: {{ form.fundraiser['restaurant-name'] }}</span>
 					</div>
-					<div v-if="form.fundraiser.is_fundraiser === 'donation_drive'" class="div-moved-in">
+					<div v-if="form.fundraiser.fundraiser_type === 'donation_drive'" class="div-moved-in">
 						<h3>Donation Drive Fundraiser</h3>
 						<span>Items to be collected: {{ form.fundraiser['donation_drive-items-to-be-collected'] }}</span>
 						<span>Organization recieving the items: {{ form.fundraiser['donation_drive-receiving-organization-information'] }}</span>
 						<span>How will items reach organization: {{ form.fundraiser['donation_drive-receiving-organization-delivery-plan'] }}</span>
 					</div>
-					<div v-if="form.fundraiser.is_fundraiser === 'food_sales'" class="div-moved-in">
+					<div v-if="form.fundraiser.fundraiser_type === 'food_sales'" class="div-moved-in">
 						<h3>Food Sales Fundraiser</h3>
 						<span>Product description: {{ form.fundraiser['food_sales-product-description'] }}</span>
 						<span>Product expected selling price: ${{ form.fundraiser['food_sales-expected-selling-price'] }}</span>
@@ -32,7 +33,7 @@
 						<span>Expected income: ${{ form.fundraiser['food_sales-expected-income'] }}</span>
 						<span>Expected costs: ${{ form.fundraiser['food_sales-expected-costs'] }}</span>
 					</div>
-					<div v-if="form.fundraiser.is_fundraiser === 'product'" class="div-moved-in">
+					<div v-if="form.fundraiser.fundraiser_type === 'product'" class="div-moved-in">
 						<h3>Non-Food Product Sales Fundraiser</h3>
 						<span>Product description: {{ form.fundraiser['product-product-description'] }}</span>
 						<span>Product expected selling price: ${{ form.fundraiser['product-expected-selling-price'] }}</span>
@@ -40,7 +41,7 @@
 						<span>Expected income: ${{ form.fundraiser['product-expected-income'] }}</span>
 						<span>Expected costs: ${{ form.fundraiser['product-expected-costs'] }}</span>
 					</div>
-					<div v-if="form.fundraiser.is_fundraiser === 'third_party_fundraiser'" class="div-moved-in">
+					<div v-if="form.fundraiser.fundraiser_type === 'third_party_fundraiser'" class="div-moved-in">
 						<h3>Third-party/online Fundraiser</h3>
 						<span>Link to online fundraising page: {{ form.fundraiser['third_party_fundraiser-link'] }}</span>
 						<span>Agreed/signed with the following name: {{ form.fundraiser['third_party_fundraiser-e-signature'] }}</span>
