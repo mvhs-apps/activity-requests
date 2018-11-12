@@ -7,6 +7,7 @@ import StartForm from './views/StartFormPage.vue';
 import FormPage from './views/FormPage.vue';
 import ViewFormPage from './views/ViewFormPage.vue';
 import BadBrowserPage from './views/BadBrowserPage.vue';
+import FormSubmittedPage from './views/FormSubmittedPage.vue';
 
 Vue.use(Router)
 
@@ -36,6 +37,14 @@ let router = new Router({
 			component: FormPage,
 			meta: {
 				title: 'Form - Activity Requests'
+			}
+		},
+		{
+			path: '/form-submitted/:id',
+			name: 'form-submitted',
+			component: FormSubmittedPage,
+			meta: {
+				title: 'Form Submitted - Activity Requests'
 			}
 		},
 		{

@@ -363,6 +363,9 @@
                 </div>
             </div>
         </div>
+
+        <button id="submit-button">Submit this request</button>
+
     </div>
 </template>
 
@@ -396,13 +399,18 @@
                         'tables-extra-info': '',
                         cashboxes: false,
                         'cashboxes-extra-info': '',
-                        setup_image: 'https://'
+                        setup_image: ''
                     },
                     fundraiser: {
                         fundraiser_type: 'select_one',
 
                     }
                 }
+            }
+        },
+        methods: {
+            submitForm() {
+
             }
         },
         mounted() {
@@ -420,6 +428,28 @@
 </script>
 
 <style scoped>
+
+    #submit-button {
+        display: block;
+        margin: 0 auto;
+        width: 225px;
+        height: 70px;
+        background: transparent;
+        outline: none;
+        border: 3px solid black;
+        cursor: pointer;
+        border-radius: 40px;
+        font-size: 18px;
+        font-family: 'Avenir';
+        transition: .2s ease all;
+    }
+
+    #submit-button:hover {
+        background: #fccb0b;
+        border-color: #fccb0b;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    }
+
     .form-section-title {
         font-size: 50px;
         font-weight: bold;
