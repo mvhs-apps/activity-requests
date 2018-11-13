@@ -419,9 +419,9 @@
                     },
                     method: 'POST',
                     body: JSON.stringify(this.form)
-                }).then(res => res.json()).then(res => {
-                    console.log(res);
-                });
+                }).then(res => res.json())
+                .then(res => console.log(res))
+                .catch(err => console.log(err));
             }
         },
         mounted() {

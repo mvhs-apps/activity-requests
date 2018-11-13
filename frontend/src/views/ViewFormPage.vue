@@ -115,6 +115,8 @@
 						...res.data
 					}
 
+					document.title = this.form.general.activity_name + ' - Activity Requests';
+
 				});
 			}
 		},

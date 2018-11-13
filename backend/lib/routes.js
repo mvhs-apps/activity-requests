@@ -30,20 +30,37 @@ router.post('/submit-request', (req, res) => {
 
 	// TODO: idk maybe add some validation???
 
+	req.body.meta = {
+		date_submitted: Date.now()
+	}
+
 	firebase.database().ref(`/forms/${id}`).set(form, err => {
 		if (err) {
 			res.json(responses.error('error_writing_data'));
 		} else {
 
-			mailer({
+			let a = mailer({
 				to: form.general.student_email,
 				subject: 'Activity Request Submitted',
 				html: emails.newRequestStudent({
+					id,
 					studentName: form.general.student_name,
-					activityName: form.general.activity_name,
-					id
+					activityName: form.general.activity_name
 				})
-			}).then(_ => res.json(responses.success(id)) );
+			});
+
+			let b = mailer({
+				to: form.general.advisor_email,
+				subject: 'Activity Request Submitted',
+				html: emails.newRequestAdvisor({
+					id,
+					studentName: form.general.student_name,
+					clubName: form.general.club_name,
+					activityName: form.general.activity_name
+				})
+			});
+
+			Promise.all([a, b]).then(_ => res.json(responses.success(id)) );
 		}
 	});
 });
