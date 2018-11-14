@@ -2,21 +2,16 @@
     <div>
         <h1>Your request was submitted!</h1>
         <br>
-        <p>You can expect an email sent to the following email: </p>
-
+        <p>You can expect an email sent to you with necessary information.</p>
+        <br>
+        <p>The ID of your request is:</p>
+        <br>
+        <span style="display:inline; background: #ddd; padding: 6px 10px; border-radius: 4px;">{{ this.$route.params.id }}</span>
+        <br>
+        <br>
+        <p>Keep this ID safe! If you lose this ID, you will have to restart</p>
     </div>
 </template>
-
-
-<script>
-    export default {
-        data() {
-            return {
-                
-            }
-        }
-    }
-</script>
 
 
 <style scoped>

@@ -60,7 +60,8 @@ router.post('/submit-request', (req, res) => {
 				})
 			});
 
-			Promise.all([a, b]).then(_ => res.json(responses.success(id)) );
+			Promise.all( [a, b] ).then(_ => res.json(responses.success(id)) );
+			// res.json(responses.success(id));
 		}
 	});
 });
