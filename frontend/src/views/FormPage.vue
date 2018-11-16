@@ -7,9 +7,9 @@
 					<div class="text-input">
 						<span class="input-title">Your Name</span>
 						<input type="text" placeholder="First and last" v-model.trim="form.general.student_name">
-                        <span class="feedback" style="color: #d50000;"
-                            v-show="form.general.student_name && (!form.general.student_name.includes(' '))"
-                        >First and last name, please</span>
+						<span class="feedback" style="color: #d50000;"
+							v-show="form.general.student_name && (!form.general.student_name.includes(' '))"
+						>First and last name, please</span>
 					</div>
 				</div>
 				<div class="input-area">
@@ -29,8 +29,8 @@
 						<span class="input-title">Your Email</span>
 						<input type="text" v-model.trim="form.general.student_email" placeholder="MVLA email">
 						<span class="feedback" style="color: #d50000;"
-                            v-show="form.general.student_email && (!form.general.student_email.includes('@mvla.net') || !emailRegEx.test(form.general.student_email))"
-                        >Please enter a valid MVLA email</span>
+							v-show="form.general.student_email && (!form.general.student_email.includes('@mvla.net') || !emailRegEx.test(form.general.student_email))"
+						>Please enter a valid MVLA email</span>
 					</div>
 				</div>
 				<div class="input-area">
@@ -38,8 +38,8 @@
 						<span class="input-title">Club Advisor Email</span>
 						<input type="text" v-model.trim="form.general.advisor_email" placeholder="MVLA email">
 						<span class="feedback" style="color: #d50000;"
-                            v-show="form.general.advisor_email && !emailRegEx.test(form.general.advisor_email)"
-                        >Please enter a valid email</span>
+							v-show="form.general.advisor_email && !emailRegEx.test(form.general.advisor_email)"
+						>Please enter a valid email</span>
 					</div>
 				</div>
 				<div class="input-area">
@@ -55,6 +55,9 @@
 						<span class="input-title" style="margin-bottom: 0;">Start date of event</span>
 						<span class="input-subtitle">This can be the day of the event or, if your event spans multiple days, the first day of the event</span>
 						<input type="date" v-model.trim="form.general.start_date" placeholder="mm/dd/yyyy">
+						<span class="feedback" style="color: #d50000;" v-show="new Date(form.general.start_date) < Date.now()">
+							Please enter a date in the future
+						</span>
 					</div>
 				</div>
 				<div class="input-area">
@@ -75,7 +78,7 @@
 							<option value="select_one" disabled>Select one</option>
 							<option value="yes">Yes</option>
 							<option value="no">No</option>
-						</select>       
+						</select>
 					</div>
 				</div>
 				<div class="input-area">
@@ -131,7 +134,7 @@
 					<div class="input-area checkbox-extension" v-show="form.campus.theater">
 						<div class="text-input">
 							<span class="input-title" style="margin-bottom: 0;">Please fill out this form for theater use</span>
-							<span class="input-subtitle">Passoword is 'spartans'</span>
+							<span class="input-subtitle">Password is 'spartans'</span>
 							<br>
 							<a href="https://www.spartantheatermvhs.com/bookingmvla/" target="_blank">https://www.spartantheatermvhs.com/bookingmvla/</a>
 						</div>
@@ -184,9 +187,12 @@
 						<div class="input-area checkbox-extension" v-show="form.campus.screens">
 							<div class="text-input">
 								<span class="input-title" style="margin-bottom: 0;">Quantity of projector(s)/screen(s)</span>
-								<span class="input-subtitle">Enter a number in the range 0 to 2</span>
-								<input type="number" min="0" max="2" v-model="form.campus['screens-extra-info']" placeholder="Number here">
-								<span class="feedback">Please enter a number in the range 0 to 2</span>
+								<span class="input-subtitle">Enter a number between 1 and 2</span>
+								<input type="number" min="1" max="2" v-model="form.campus['screens-extra-info']"
+											 placeholder="Number here">
+								<span class="feedback" v-show="form.campus['screens-extra-info'] < 1 || form.campus['screens-extra-info'] > 2">
+									Please enter a number between 1 and 2
+								</span>
 							</div>
 						</div>
 						<div class="md-checkbox">
@@ -196,9 +202,12 @@
 						<div class="input-area checkbox-extension" v-show="form.campus.tables">
 							<div class="text-input">
 								<span class="input-title" style="margin-bottom: 0;">Quantity of tables/chairs</span>
-								<span class="input-subtitle">Enter a number in the range 0 to 25</span>
-								<input type="number" min="0" max="25" v-model="form.campus['tables-extra-info']" placeholder="Number here">
-								<span class="feedback">Please enter a number in the range 0 to 25</span>
+								<span class="input-subtitle">Enter a number between 1 and 25</span>
+								<input type="number" min="1" max="25" v-model="form.campus['tables-extra-info']"
+											 placeholder="Number here">
+								<span class="feedback" v-show="form.campus['tables-extra-info'] < 1 || form.campus['tables-extra-info'] > 25">
+									Please enter a number between 1 and 25
+								</span>
 							</div>
 						</div>
 						<div class="md-checkbox">
@@ -208,9 +217,12 @@
 						<div class="input-area checkbox-extension" v-show="form.campus.cashboxes">
 							<div class="text-input">
 								<span class="input-title" style="margin-bottom: 0;">How many cashboxes?</span>
-								<span class="input-subtitle">Enter a number in the range 0 to 3</span>
-								<input type="number" v-model="form.campus['cashboxes-extra-info']" placeholder="Number here">
-								<span class="feedback">Please enter a number in the range 0 to 3</span>
+								<span class="input-subtitle">Enter a number between 1 and 3</span>
+								<input type="number" min="1" max="3" v-model="form.campus['cashboxes-extra-info']"
+											 placeholder="Number here">
+								<span class="feedback" v-show="form.campus['cashboxes-extra-info'] < 1 || form.campus['cashboxes-extra-info'] > 3">
+									Please enter a number in the range 1 to 3
+								</span>
 							</div>
 						</div>
 					</div>
@@ -220,9 +232,9 @@
 						<span class="input-title" style="margin-bottom: 0;">Paste a link to your setup (optional)</span>
 						<span class="input-subtitle">Upload an image/drawing to Google Drive, change the sharing settings to "anyone with a link," and paste the link here.</span>
 						<input type="text" v-model="form.campus.setup_image" placeholder="Paste link here">
-						<span class="feedback"
-                            v-show="form.campus.setup_image && !urlRegEx.test(form.campus.setup_image)"
-                        >Please enter a valid url</span>
+						<span class="feedback" v-show="form.campus.setup_image && !urlRegEx.test(form.campus.setup_image)">
+							Please enter a valid url
+						</span>
 					</div>
 				</div>
 			</div>
@@ -239,7 +251,7 @@
 							<option value="food_sales">Food Sales</option>
 							<option value="product">Non-Food Product Sale</option>
 							<option value="third_party_fundraiser">Third-party/Online Fundraiser</option>
-						</select>       
+						</select>
 					</div>
 				</div>
 				<div v-show="form.fundraiser.fundraiser_type === 'restaurant'">
@@ -360,7 +372,7 @@
 							<span class="input-title" style="margin-bottom: 0;">Paste a link to your online fundraising page</span>
 							<span class="input-subtitle">Ex: Snap Raise, Go Fund Me, etc.</span>
 							<input type="text" v-model="form.fundraiser['third_party_fundraiser-link']" placeholder="Paste link here">
-							<span class="feedback">Please enter a valid url</span>
+							<span class="feedback" v-show="!urlRegEx.test(form.fundraiser['third_party_fundraiser-link'])">Please enter a valid url</span>
 						</div>
 					</div>
 					<div class="input-area">
@@ -378,8 +390,17 @@
 
 
 		<div v-show="!showForm">
-            <div class="lds-roller" style="position: absolute; top: 50%; left: 50%; margin-left: -45px; margin-top: -45px;"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <span style="display: block; font-weight: bold; font-size: 32px; position: absolute; top: 50%; left: 50%;margin-left: -70px; margin-top: 40px;">Loading</span>
+			<div class="lds-roller" style="position: absolute; top: 50%; left: 50%; margin-left: -45px; margin-top: -45px;">
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
+			<span style="display: block; font-weight: bold; font-size: 32px; position: absolute; top: 50%; left: 50%;margin-left: -70px; margin-top: 40px;">Loading</span>
 		</div>
 
 	</div>
@@ -387,14 +408,14 @@
 
 <script>
 
-	import { serverHost } from '@/constants';
+	import {serverHost} from '@/constants';
 
 	export default {
 		data() {
 			return {
-                showForm: true,
-                emailRegEx: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                urlRegEx: /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
+				showForm: true,
+				emailRegEx: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+				urlRegEx: /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
 				form: {
 					general: {
 						student_name: '',
@@ -428,7 +449,7 @@
 
 					}
 				}
-			}
+			};
 		},
 		methods: {
 			submitForm() {
@@ -441,12 +462,12 @@
 					method: 'POST',
 					body: JSON.stringify(this.form)
 				}).then(res => res.json())
-				.then(res => {
-					console.log(res);
-					this.$router.push({
-						path: '/form-submitted/' + res.data
-					});
-				}).catch(err => console.log(err));
+					.then(res => {
+						console.log(res);
+						this.$router.push({
+							path: '/form-submitted/' + res.data
+						});
+					}).catch(err => console.log(err));
 			}
 		},
 		mounted() {
@@ -483,7 +504,7 @@
 	#submit-button:hover {
 		background: #fccb0b;
 		border-color: #fccb0b;
-		box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 	}
 
 	.form-section-title {
@@ -492,7 +513,7 @@
 		display: inline-block;
 		padding-bottom: 0;
 		margin-bottom: 3px;
-		background-image: linear-gradient(120deg, #fccb0b 0,#fccb0b 100%);
+		background-image: linear-gradient(120deg, #fccb0b 0, #fccb0b 100%);
 		background-repeat: no-repeat;
 		background-size: 100% 8px;
 		background-position: 0 84%;
@@ -502,7 +523,7 @@
 		border-radius: 0;
 		border: none;
 		display: block;
-		border-bottom: 1px solid rgba(0,0,0,0.15);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 		padding: 0 10px 5px 0;
 		transition: all .2s ease;
 		font-size: 16px;
@@ -517,7 +538,7 @@
 		padding: 0px 100px;
 	}
 
-    .text-input > div, .select-input > div {
+	.text-input > div, .select-input > div {
 		display: inline-block;
 	}
 
@@ -549,82 +570,84 @@
 	}
 
 	.text-input .expanded:focus {
-		box-shadow: 3px 5px 4px 0px rgba(0,0,0,.11);
-    }
-    
-    .input-area {
-        min-height: 50px;
-        margin: 20px 0 20px 0;
-        padding: 16px 0;
-    }
+		box-shadow: 3px 5px 4px 0px rgba(0, 0, 0, .11);
+	}
 
-    .input-title {
-        font-size: 24px;
-        margin-bottom: 18px;
-        display: inline-block;
-    }
+	.input-area {
+		min-height: 50px;
+		margin: 20px 0 20px 0;
+		padding: 16px 0;
+	}
 
-    .input-subtitle {
-        display: block;
-        color: rgb(95, 95, 95);
-        font-size: 13px;
-        margin-bottom: 18px;
-    }
+	.input-title {
+		font-size: 24px;
+		margin-bottom: 18px;
+		display: inline-block;
+	}
 
-    .text-input > div, .select-input > div {
-        display: inline-block;
-    }
+	.input-subtitle {
+		display: block;
+		color: rgb(95, 95, 95);
+		font-size: 13px;
+		margin-bottom: 18px;
+	}
 
-    .text-input input {
-        display: block;
-        border: none;
-        padding: 0 10px 5px 0;
-        outline: none;
-        border-radius: 0;
-        transition: all .2s ease;
-        border-bottom: 1px solid rgba(0,0,0,0.15);
-        font-size: 16px;
-        width: 300px;
-    }
-    .text-input input[type='file'] {
-        display: block;
-        border: none;
-        padding: 0 10px 5px 0;
-        outline: none;
-        border-radius: 0;
-        transition: all .2s ease;
-        font-size: 16px;
-        width: 300px;
-    }
-    .text-input textarea {
-        border-radius: 0;
-        border: none;
-        display: block;
-        border-bottom: 1px solid rgba(0,0,0,0.15);
-        padding: 0 10px 5px 0;
-        transition: all .2s ease;
-        font-size: 16px;
-        outline: none;
-        width: 300px;
-        height: 30px;
-        resize: none;
-        transition: all 0.4s ease;
-    }
+	.text-input > div, .select-input > div {
+		display: inline-block;
+	}
+
+	.text-input input {
+		display: block;
+		border: none;
+		padding: 0 10px 5px 0;
+		outline: none;
+		border-radius: 0;
+		transition: all .2s ease;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+		font-size: 16px;
+		width: 300px;
+	}
+
+	.text-input input[type='file'] {
+		display: block;
+		border: none;
+		padding: 0 10px 5px 0;
+		outline: none;
+		border-radius: 0;
+		transition: all .2s ease;
+		font-size: 16px;
+		width: 300px;
+	}
+
+	.text-input textarea {
+		border-radius: 0;
+		border: none;
+		display: block;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+		padding: 0 10px 5px 0;
+		transition: all .2s ease;
+		font-size: 16px;
+		outline: none;
+		width: 300px;
+		height: 30px;
+		resize: none;
+		transition: all 0.4s ease;
+	}
 
 	.text-input:focus {
 		border-bottom: 2px solid #1a73e8;
 	}
 
-    .text-input input::placeholder, .text-input textarea::placeholder {
-        color: #757575;
-    }
+		.text-input input::placeholder, .text-input textarea::placeholder {
+		color: #757575;
+	}
 
 	.checkbox-extension {
 		padding-left: 20px;
-        border-radius: 8px;
-        padding: 16px 12px;
-		border: 1px solid rgba(0,0,0,.1);
-		box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+		border-radius: 8px;
+		padding: 16px 12px;
+		border: 1px solid rgba(0, 0, 0, .1);
+		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 		border-left: 6px solid #fccb0b;
 	}
 
@@ -632,9 +655,10 @@
 		margin: 0 !important;
 		font-size: 20px;
 	}
+
 	.hoverable + div {
 		opacity: 0;
-		box-shadow: 0 1px 3px 0 rgba(0,0,0,0.17), 0 1px 3px 0 rgba(0,0,0,0.17);
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.17), 0 1px 3px 0 rgba(0, 0, 0, 0.17);
 		min-height: 0;
 		min-width: 0;
 		/*min-height: 100px;
@@ -647,23 +671,25 @@
 		transition: opacity .2s ease;
 		font-size: 14px;
 	}
+
 	.hoverable:hover + div {
 		opacity: 1;
 		z-index: 10;
 	}
+
 	@media only screen and (max-width: 350px) {
 		.hoverable + div {
 			width: 250px;
 		}
-    }
-    
-    .text-input > .feedback {
-        display: block;
-        font-size: 12px;
-        padding-top: 8px;
-        /*color: #666666;*/
-        color: #d50000;
-    }
+	}
+
+	.text-input > .feedback {
+		display: block;
+		font-size: 12px;
+		padding-top: 8px;
+		/*color: #666666;*/
+		color: #d50000;
+	}
 
 	/* checkbox-stuff */
 	.md-checkbox {
@@ -671,9 +697,11 @@
 		margin: 16px 0;
 		text-align: left;
 	}
+
 	.md-checkbox.md-checkbox-inline {
 		display: inline-block;
 	}
+
 	.md-checkbox label {
 		cursor: pointer;
 		font-weight: normal;
@@ -683,12 +711,14 @@
 		-ms-user-select: none;
 		user-select: none;
 	}
+
 	.md-checkbox label:before, .md-checkbox label:after {
 		content: "";
 		position: absolute;
 		left: 0;
 		top: 0;
 	}
+
 	.md-checkbox label:before {
 		width: 20px;
 		height: 20px;
@@ -698,15 +728,18 @@
 		cursor: pointer;
 		transition: background 0.3s;
 	}
+
 	.md-checkbox input[type="checkbox"] {
 		outline: 0;
 		margin-right: 10px;
 		visibility: hidden;
 	}
+
 	.md-checkbox input[type="checkbox"]:checked + label:before {
 		background: #337ab7;
 		border: none;
 	}
+
 	.md-checkbox input[type="checkbox"]:checked + label:after {
 		transform: rotate(-45deg);
 		top: 5px;
@@ -717,12 +750,15 @@
 		border-top-style: none;
 		border-right-style: none;
 	}
+
 	.md-checkbox input[type="checkbox"]:disabled + label:before {
 		border-color: rgba(0, 0, 0, 0.26);
 	}
+
 	.md-checkbox input[type="checkbox"]:disabled:checked + label:before {
 		background: rgba(0, 0, 0, 0.26);
 	}
+
 	*, *:before, *:after {
 		box-sizing: border-box;
 	}
@@ -733,10 +769,12 @@
 		width: 64px;
 		height: 64px;
 	}
+
 	.lds-roller div {
 		animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 		transform-origin: 32px 32px;
 	}
+
 	.lds-roller div:after {
 		content: " ";
 		display: block;
@@ -747,69 +785,86 @@
 		background: #000;
 		margin: -3px 0 0 -3px;
 	}
+
 	.lds-roller div:nth-child(1) {
 		animation-delay: -0.036s;
 	}
+
 	.lds-roller div:nth-child(1):after {
 		top: 50px;
 		left: 50px;
 	}
+
 	.lds-roller div:nth-child(2) {
 		animation-delay: -0.072s;
 	}
+
 	.lds-roller div:nth-child(2):after {
 		top: 54px;
 		left: 45px;
 	}
+
 	.lds-roller div:nth-child(3) {
 		animation-delay: -0.108s;
 	}
+
 	.lds-roller div:nth-child(3):after {
 		top: 57px;
 		left: 39px;
 	}
+
 	.lds-roller div:nth-child(4) {
 		animation-delay: -0.144s;
 	}
+
 	.lds-roller div:nth-child(4):after {
 		top: 58px;
 		left: 32px;
 	}
+
 	.lds-roller div:nth-child(5) {
 		animation-delay: -0.18s;
 	}
+
 	.lds-roller div:nth-child(5):after {
 		top: 57px;
 		left: 25px;
 	}
+
 	.lds-roller div:nth-child(6) {
 		animation-delay: -0.216s;
 	}
+
 	.lds-roller div:nth-child(6):after {
 		top: 54px;
 		left: 19px;
 	}
+
 	.lds-roller div:nth-child(7) {
 		animation-delay: -0.252s;
 	}
+
 	.lds-roller div:nth-child(7):after {
 		top: 50px;
 		left: 14px;
 	}
+
 	.lds-roller div:nth-child(8) {
 		animation-delay: -0.288s;
 	}
+
 	.lds-roller div:nth-child(8):after {
 		top: 45px;
 		left: 10px;
 	}
+
 	@keyframes lds-roller {
 		0% {
-		transform: rotate(0deg);
+			transform: rotate(0deg);
 		}
 		100% {
-		transform: rotate(360deg);
+			transform: rotate(360deg);
 		}
 	}
-	
+
 </style>
