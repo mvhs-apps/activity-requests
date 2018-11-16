@@ -2,16 +2,58 @@
 	<div>
 		<div v-if="isValidForm">
 			<div v-if="form.loaded === true">
-				<span>From ID: <span style="display:inline; background: #ddd; padding: 6px 10px; border-radius: 4px;">{{ formId }}</span></span>
+
 				<span style="font-size: 40px; font-weight: bold;">{{ form.general.activity_name }}</span>
-				<span>Student requester: {{ form.general.student_name }}</span>
-				<span>Student email: {{ form.general.student_email }}</span>
-				<span>Adult advisor email: {{ form.general.advisor_email }}</span>
-				<span>Description: {{ form.general.event_description }}</span>
-				<span>Dates: {{ form.general.all_dates }}</span>
+				<span>Form ID: <span style="display:inline; background: #e8e8e8; padding: 4px 10px; border-radius: 4px; font-size: 14px;">{{ formId }}</span></span>
 				<br>
-				<div v-if="form.general.is_fundraiser === 'yes'" class="div-moved-in">
+				<div class="div-moved-in-style">
+					<h2>General Information</h2>
+					<span>Student requester: {{ form.general.student_name }}</span>
+					<span>Student email: {{ form.general.student_email }}</span>
+					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
+					<span>Description: {{ form.general.event_description }}</span>
+					<span>Dates: {{ form.general.all_dates }}</span>
+				</div>
+				<br>
+				<div id="approved-area" class="div-moved-in-style">
+					<h2>Activity Approval Progress</h2>
+					<span>This acitvity <span style="display: inline; font-weight: bold;">cannot</span> occur without the approval of all of the following:</span>
+					<br>
+					<div>
+						<span>ASB approval: </span>
+						<span v-if="form.meta.approved.asb" class="approved">{{ approvedText }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
+					<div v-if="form.campus.cafeteria">
+						<span>Cafeteria approval: </span>
+						<span v-if="form.meta.approved.cafeteria" class="approved">{{ approvedText }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
+					<div v-if="form.campus.gym">
+						<span>Gym approval: </span>
+						<span v-if="form.meta.approved.gym" class="approved">{{ approvedText }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
+					<div v-if="form.campus.library">
+						<span>Library approval: </span>
+						<span v-if="form.meta.approved.library" class="approved">{{ approvedText }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
+					<div v-if="form.campus.theater">
+						<span>Theater approval: </span>
+						<span v-if="form.meta.approved.theater" class="approved">{{ approvedText }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
+					<div v-if="form.campus.ccc">
+						<span>College and Career Center approval: </span>
+						<span v-if="form.meta.approved.ccc" class="approved">{{ approvedText }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
+				</div>
+				<br>
+				<div v-if="form.general.is_fundraiser === 'yes'" class="div-moved-in-style">
 					<h2>Fundraiser Details</h2>
+					<span>This activity is a fundraiser</span>
 
 					<!-- the different types of fundraisers -->
 					<div v-if="form.fundraiser.fundraiser_type === 'restaurant'" class="div-moved-in">
@@ -49,8 +91,9 @@
 
 				</div>
 
-				<div v-if="form.general.event_on_campus === 'yes'" class="div-moved-in">
-					<h2>This activity will occur on campus</h2>
+				<div v-if="form.general.event_on_campus === 'yes'" class="div-moved-in-style">
+					<h2>Campus Details</h2>
+					<span>This activity will occur on campus</span>
 					<span v-if="form.campus.setup_image">Setup Image: {{ form.campus.setup_image }}</span>
 					<div class="div-moved-in">
 						<h3>Location information</h3>
@@ -94,6 +137,8 @@
 			return {
 				formId: this.$route.params.id,
 				isValidForm: true,
+				notApprovedText: 'NO',
+				approvedText: 'YES',
 				form: {
 					loaded: false,
 					student_email: ''
@@ -132,8 +177,19 @@
 		margin-top: 10px;
 		margin-left: 16px;
 		padding: 10px;
-		background: #eee;
+		background: #eaeaea;
 		border-radius: 6px;
+	}
+
+	.div-moved-in-style {
+		max-width: 750px;
+		margin-top: 10px;
+		margin-left: 16px;
+		padding: 18px;
+		border-radius: 8px;
+		border: 1px solid rgba(0,0,0,.1);
+		box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+		border-left: 6px solid #fccb0b;
 	}
 
 	span {
@@ -141,12 +197,29 @@
 	}
 
 	h2 {
-		font-size: 30px;
+		font-size: 28px;
+		display: inline-block;
+		padding-bottom: 0;
+		margin-bottom: 6px;
 		font-weight: bold;
 	}
 
 	h3 {
 		font-size: 20px;
+		font-weight: bold;
+	}
+
+	#approved-area > div > span {
+		display: inline;
+	}
+
+	.approved {
+		color: green;
+		font-weight: bold;
+	}
+
+	.not-approved {
+		color: red;
 		font-weight: bold;
 	}
 </style>

@@ -30,8 +30,12 @@ router.post('/submit-request', (req, res) => {
 
 	// TODO: idk maybe add some validation???
 
+	// do not remove the following line; very important for security
 	req.body.meta = {
-		date_submitted: Date.now()
+		date_submitted: Date.now(),
+		approved: {
+			asb: false
+		}
 	}
 
 	firebase.database().ref(`/forms/${id}`).set(form, err => {
@@ -64,6 +68,41 @@ router.post('/submit-request', (req, res) => {
 			// res.json(responses.success(id));
 		}
 	});
+});
+
+router.post('/update-password', (req, res) => {
+	let dept = req.body.dept;
+	let authPassword = req.body.authPassword;
+	let newPassword = req.body.newPassword;
+
+	firebase.database().ref('/settings/passwords/asb').once('value').then(snapshot => {
+		if (snapshot.val() === authPassword) {
+
+			firebase.database().ref(`/settings/passwords/${dept}`).set(newPassword, err => {
+				if (err) return res.json(responses.error('error_writing_data'));
+				
+				return res.json(responses.success());
+			});
+
+		} else {
+			return res.json(responses.error('bad_password'));
+		}
+	});
+});
+
+router.post('/get-all-requests', (req, res) => {
+	let authPassword = req.body.authPassword;
+
+	firebase.database().ref('/settings/passwords/asb').once('value').then(snapshot => {
+
+		if (snapshot.val() === authPassword) {
+			firebase.database().ref('/forms/').once('value').then(snapshot => {
+				res.json(responses.success(snapshot.val()));
+			});
+		}
+		
+	});
+
 });
 
 module.exports = router;

@@ -536,8 +536,8 @@
 		outline: none;
 	}
 
-	.text-input input::placeholder, .text-input textarea::placeholder {
-		color: #757575;
+	.text-input input:focus {
+		border-bottom: 2px solid #4285f4;
 	}
 
 	.text-input .expanded {
@@ -610,6 +610,10 @@
         resize: none;
         transition: all 0.4s ease;
     }
+
+	.text-input:focus {
+		border-bottom: 2px solid #1a73e8;
+	}
 
     .text-input input::placeholder, .text-input textarea::placeholder {
         color: #757575;
