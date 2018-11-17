@@ -4,7 +4,8 @@
 			<div v-if="form.loaded === true">
 
 				<span style="font-size: 40px; font-weight: bold;">{{ form.general.activity_name }}</span>
-				<span>Form ID: <span style="display:inline; background: #e8e8e8; padding: 4px 10px; border-radius: 4px; font-size: 14px;">{{ formId }}</span></span>
+				<span>Form ID: <span
+					style="display:inline; background: #e8e8e8; padding: 4px 10px; border-radius: 4px; font-size: 14px;">{{ formId }}</span></span>
 				<br>
 				<div class="div-moved-in-style">
 					<h2>General Information</h2>
@@ -12,7 +13,8 @@
 					<span>Student email: {{ form.general.student_email }}</span>
 					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
 					<span>Description: {{ form.general.event_description }}</span>
-					<span>Dates: {{ form.general.all_dates }}</span>
+					<span>Start Date: {{ ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][new Date(form.general.start_date).getDay()] + ', ' + form.general.start_date}}</span>
+					<span>Other Dates & Times: {{ form.general.all_dates }}</span>
 				</div>
 				<br>
 				<div id="approved-area" class="div-moved-in-style">
@@ -58,8 +60,8 @@
 					<!-- the different types of fundraisers -->
 					<div v-if="form.fundraiser.fundraiser_type === 'restaurant'" class="div-moved-in">
 						<h3>Restaurant Fundraiser</h3>
-						<span>Restaurant name: {{ form.fundraiser['restaurant-address'] }}</span>
-						<span>Restaurant address: {{ form.fundraiser['restaurant-name'] }}</span>
+						<span>Restaurant name: {{ form.fundraiser['restaurant-name'] }}</span>
+						<span>Restaurant address: {{ form.fundraiser['restaurant-address'] }}</span>
 					</div>
 					<div v-if="form.fundraiser.fundraiser_type === 'donation_drive'" class="div-moved-in">
 						<h3>Donation Drive Fundraiser</h3>
@@ -94,26 +96,27 @@
 				<div v-if="form.general.event_on_campus === 'yes'" class="div-moved-in-style">
 					<h2>Campus Details</h2>
 					<span>This activity will occur on campus</span>
-					<span v-if="form.campus.setup_image">Setup Image: {{ form.campus.setup_image }}</span>
+					<span v-if="form.campus.setup_image">Setup Image: <a :href="'//' + form.campus.setup_image" target="_blank">{{ form.campus.setup_image }}</a></span>
 					<div class="div-moved-in">
 						<h3>Location information</h3>
 						<span v-if="form.campus.location_on_campus">Location on campus: {{ form.campus.location_on_campus }}</span>
 						<br>
-						<span v-if="form.campus.cafeteria">-wants the cafeteria</span>
-						<span v-if="form.campus.classroom">-wants classroom(s)</span>
-						<div v-if="form.campus['classroom-extra-info']" class="div-moved-in" style="margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
+						<span v-if="form.campus.cafeteria">Wants the cafeteria</span>
+						<span v-if="form.campus.classroom">Wants classroom(s)</span>
+						<div v-if="form.campus['classroom-extra-info']" class="div-moved-in"
+								 style="margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
 							<span>{{ form.campus['classroom-extra-info'] }}</span>
 						</div>
-						<span v-if="form.campus.gym">-wants the gym</span>
-						<span v-if="form.campus.library">-wants the library</span>
-						<span v-if="form.campus.theater">-wants the theater</span>
-						<span v-if="form.campus.ccc">-wants the College and Career Center</span>
+						<span v-if="form.campus.gym">Wants the gym</span>
+						<span v-if="form.campus.library">Wants the library</span>
+						<span v-if="form.campus.theater">Wants the theater</span>
+						<span v-if="form.campus.ccc">Wants the College and Career Center</span>
 					</div>
 					<div class="div-moved-in">
 						<h3>Desired equipment</h3>
-						<span v-if="form.campus.cashboxes">-wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
-						<span v-if="form.campus.screens">-wants {{ form.campus['screens-extra-info'] }} screens/projectors</span>
-						<span v-if="form.campus.tables">-wants {{ form.campus['tables-extra-info'] }} tables</span>
+						<span v-if="form.campus.cashboxes">Wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
+						<span v-if="form.campus.screens">Wants {{ form.campus['screens-extra-info'] }} screens/projectors</span>
+						<span v-if="form.campus.tables">Wants {{ form.campus['tables-extra-info'] }} tables</span>
 					</div>
 				</div>
 
@@ -130,52 +133,51 @@
 
 
 <script>
-	import { serverHost } from '@/constants';
+  import {serverHost} from '@/constants';
 
-	export default {
-		data() {
-			return {
-				formId: this.$route.params.id,
-				isValidForm: true,
-				notApprovedText: 'NO',
-				approvedText: 'YES',
-				form: {
-					loaded: false,
-					student_email: ''
-				}
-			}
-		},
-		methods: {
-			loadRequest() {
-				window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
-				.then(res => res.json())
-				.then(res => {
-					if (!res.success && res.error === 'no_form_exists') {
-						this.isValidForm = false;
-						return;
-					}
+  export default {
+    data() {
+      return {
+        formId: this.$route.params.id,
+        isValidForm: true,
+        notApprovedText: 'NO',
+        approvedText: 'YES',
+        form: {
+          loaded: false,
+          student_email: ''
+        }
+      };
+    },
+    methods: {
+      loadRequest() {
+        window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
+          .then(res => res.json())
+          .then(res => {
+            if (!res.success && res.error === 'no_form_exists') {
+              this.isValidForm = false;
+              return;
+            }
 
-					this.form = {
-						loaded: true,
-						...res.data
-					}
+            this.form = {
+              loaded: true,
+              ...res.data
+            };
 
-					document.title = this.form.general.activity_name + ' - Activity Requests';
+            document.title = this.form.general.activity_name + ' - Activity Requests';
 
-				});
-			}
-		},
-		mounted() {
-			this.loadRequest();
-		}
-	}
+          });
+      }
+    },
+    mounted() {
+      this.loadRequest();
+    }
+  };
 </script>
 
 
 <style scoped>
 	.div-moved-in {
 		margin-top: 10px;
-		margin-left: 16px;
 		padding: 10px;
 		background: #eaeaea;
 		border-radius: 6px;
@@ -187,8 +189,8 @@
 		margin-left: 16px;
 		padding: 18px;
 		border-radius: 8px;
-		border: 1px solid rgba(0,0,0,.1);
-		box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+		border: 1px solid rgba(0, 0, 0, .1);
+		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 		border-left: 6px solid #fccb0b;
 	}
 
