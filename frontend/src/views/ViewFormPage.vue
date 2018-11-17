@@ -14,7 +14,7 @@
 					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
 					<span>Description: {{ form.general.event_description }}</span>
 					<span>Start Date: {{ ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][new Date(form.general.start_date).getDay()] + ', ' + form.general.start_date}}</span>
-					<span>Other Dates & Times: {{ form.general.all_dates }}</span>
+					<span>Other Dates &amp; Times: {{ form.general.all_dates }}</span>
 				</div>
 				<br>
 				<div id="approved-area" class="div-moved-in-style">
@@ -99,12 +99,11 @@
 					<span v-if="form.campus.setup_image">Setup Image: <a :href="'//' + form.campus.setup_image" target="_blank">{{ form.campus.setup_image }}</a></span>
 					<div class="div-moved-in">
 						<h3>Location information</h3>
-						<span v-if="form.campus.location_on_campus">Location on campus: {{ form.campus.location_on_campus }}</span>
+						<span>Location on campus: {{ form.campus.location_on_campus }}</span>
 						<br>
 						<span v-if="form.campus.cafeteria">Wants the cafeteria</span>
 						<span v-if="form.campus.classroom">Wants classroom(s)</span>
-						<div v-if="form.campus['classroom-extra-info']" class="div-moved-in"
-								 style="margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
+						<div v-if="form.campus['classroom-extra-info']" class="div-moved-in" style="margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
 							<span>{{ form.campus['classroom-extra-info'] }}</span>
 						</div>
 						<span v-if="form.campus.gym">Wants the gym</span>
@@ -133,45 +132,45 @@
 
 
 <script>
-  import {serverHost} from '@/constants';
+	import {serverHost} from '@/constants';
 
-  export default {
-    data() {
-      return {
-        formId: this.$route.params.id,
-        isValidForm: true,
-        notApprovedText: 'NO',
-        approvedText: 'YES',
-        form: {
-          loaded: false,
-          student_email: ''
-        }
-      };
-    },
-    methods: {
-      loadRequest() {
-        window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
-          .then(res => res.json())
-          .then(res => {
-            if (!res.success && res.error === 'no_form_exists') {
-              this.isValidForm = false;
-              return;
-            }
+	export default {
+		data() {
+			return {
+				formId: this.$route.params.id,
+				isValidForm: true,
+				notApprovedText: 'NO',
+				approvedText: 'YES',
+				form: {
+					loaded: false,
+					student_email: ''
+				}
+			}
+		},
+		methods: {
+			loadRequest() {
+				window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
+					.then(res => res.json())
+					.then(res => {
+						if (!res.success && res.error === 'no_form_exists') {
+							this.isValidForm = false;
+							return;
+						}
 
-            this.form = {
-              loaded: true,
-              ...res.data
-            };
+						this.form = {
+							loaded: true,
+							...res.data
+						}
 
-            document.title = this.form.general.activity_name + ' - Activity Requests';
+						document.title = this.form.general.activity_name + ' - Activity Requests';
 
-          });
-      }
-    },
-    mounted() {
-      this.loadRequest();
-    }
-  };
+					});
+			}
+		},
+		mounted() {
+			this.loadRequest();
+		}
+	}
 </script>
 
 
