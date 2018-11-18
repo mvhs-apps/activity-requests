@@ -51,6 +51,15 @@
 						<span v-if="form.meta.approved.ccc" class="approved">{{ approvedText }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
+					<br>
+					<div class="div-moved-in">
+						<h3>Approve this request</h3>
+						<br>
+						<input type="text" v-model="approvePassword" placeholder="Department password" class="text-input">
+						<button @click="approve()" class="global-btn" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Approve</button>
+						<br>
+						<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
+					</div>
 				</div>
 				<br>
 				<div v-if="form.general.is_fundraiser === 'yes'" class="div-moved-in-style">
@@ -141,6 +150,8 @@
 				isValidForm: true,
 				notApprovedText: 'NO',
 				approvedText: 'YES',
+				badPassword: false,
+				approvePassword: '',
 				form: {
 					loaded: false,
 					student_email: ''
@@ -148,7 +159,7 @@
 			}
 		},
 		methods: {
-			loadRequest() {
+			loadData() {
 				window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
 					.then(res => res.json())
 					.then(res => {
@@ -165,10 +176,26 @@
 						document.title = this.form.general.activity_name + ' - Activity Requests';
 
 					});
+			},
+			approve() {
+				window.fetch(`${serverHost}/api/approve/${this.$route.params.id}`, {
+					method: 'POST',
+					body: JSON.stringify({ password: this.approvePassword }),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				})
+					.then(res => res.json())
+					.then(res => {
+						this.badPassword = (res.error === 'bad_password') ? true : false;
+						this.loadData();
+					});
+				
+				this.approvePassword = '';
 			}
 		},
 		mounted() {
-			this.loadRequest();
+			this.loadData();
 		}
 	}
 </script>
@@ -222,5 +249,24 @@
 	.not-approved {
 		color: red;
 		font-weight: bold;
+	}
+
+	.text-input {
+		/* border-radius: 6px; */
+		outline: none;
+		border: none;
+		font-size: 16px;
+		width: 300px;
+		height: 50px;
+		padding: 0 18px;
+		font-family: 'Avenir';
+		color: #3c4043;
+		background: #d1cfcf;
+		transition: all .2s ease;
+	}
+
+	.text-input:focus {
+		box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2), 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12);
+		background: #fff;
 	}
 </style>

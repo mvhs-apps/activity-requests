@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<br>
-		<button id="track-button" @click="goToPage()">Track Request</button>
+		<button class="global-btn" @click="goToPage()">Track Request</button>
 	</div>
 </template>
 
@@ -48,25 +48,5 @@
         font-size: 16px;
         width: 300px;
     }
-
-	#track-button {
-		display: block;
-		width: 150px;
-		height: 40px;
-		background: transparent;
-		outline: none;
-		border: 2px solid black;
-		cursor: pointer;
-		border-radius: 6px;
-		font-size: 16px;
-		font-family: 'Avenir';
-		transition: .2s ease all;
-	}
-
-	#track-button:hover {
-		background: #fccb0b;
-		border-color: #fccb0b;
-		box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-	}
 </style>
 

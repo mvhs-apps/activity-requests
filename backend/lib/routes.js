@@ -13,6 +13,10 @@ function generateId(length) {
 	return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
 }
 
+async function doesFormExist(id) {
+	return (await firebase.database().ref(`/forms/${id}`).once('value')).exists();
+}
+
 router.get('/get-request/:id', (req, res) => {
 	const id = req.params.id;
 
@@ -96,6 +100,27 @@ router.post('/update-password', (req, res) => {
 	});
 });
 
+router.post('/approve/:id', async (req, res) => {
+	let id = req.params.id;
+	let password = req.body.password;
+
+	let passwords = (await firebase.database().ref('/settings/passwords').once('value')).val();
+
+	for (let dept in passwords) {
+		if (passwords.hasOwnProperty(dept) && passwords[dept] === password) {
+
+			if (await doesFormExist(id)) {
+				firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).set(true);
+			}
+			
+			return res.json(responses.success());
+		}
+	}
+
+	res.json(responses.error('bad_password'));
+
+});
+
 router.post('/get-all-requests', (req, res) => {
 	let authPassword = req.body.authPassword;
 
@@ -108,7 +133,6 @@ router.post('/get-all-requests', (req, res) => {
 		}
 		
 	});
-
 });
 
 module.exports = router;
