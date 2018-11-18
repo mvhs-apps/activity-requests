@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<div id="nav">
-			<span @click="$router.push({ path: '/' })">MVHS Activity Requests</span>
+			<span @click="$router.push({ path: '/' })" style="font-weight: bold;">MVHS Activity Requests</span>
 			<router-link to="/">Home</router-link>
 			<router-link to="/start-form">Form</router-link>
 			<router-link to="/track">Track Request</router-link>

@@ -13,7 +13,7 @@
 					<span>Student email: {{ form.general.student_email }}</span>
 					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
 					<span>Description: {{ form.general.event_description }}</span>
-					<span>Start Date: {{ ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][new Date(form.general.start_date).getDay()] + ', ' + form.general.start_date}}</span>
+					<span>Start Date: {{ ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][new Date(form.general.start_date).getDay()] + ', ' + form.general.start_date }}</span>
 					<span>Other Dates &amp; Times: {{ form.general.all_dates }}</span>
 				</div>
 				<br>
@@ -188,9 +188,9 @@
 		margin-left: 16px;
 		padding: 18px;
 		border-radius: 8px;
-		border: 1px solid rgba(0, 0, 0, .1);
 		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 		border-left: 6px solid #fccb0b;
+		transition: box-shadow .2s ease;
 	}
 
 	span {

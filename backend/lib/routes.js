@@ -5,6 +5,7 @@ const mailer = require('./mailer');
 const emails = require('./emails');
 
 const responses = require('./responses');
+const emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 firebase.initializeApp(require('./firebase.json'));
 
@@ -28,7 +29,12 @@ router.post('/submit-request', (req, res) => {
 	let form = req.body;
 	let id = generateId(40);
 
-	// TODO: idk maybe add some validation???
+	// TODO: idk maybe add some more validation???
+
+	let f = form.general;
+	if (!f.student_name || !f.activity_name || !f.club_name || !emailRegEx.test(f.student_email) || !emailRegEx.test(f.advisor_email) || !f.event_description || !f.start_date || !f.all_dates) {
+		return res.json(responses.json('bad_information'));
+	}
 
 	// do not remove the following line; very important for security
 	req.body.meta = {
