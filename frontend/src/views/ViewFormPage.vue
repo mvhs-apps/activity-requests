@@ -3,9 +3,14 @@
 		<div v-if="isValidForm">
 			<div v-if="form.loaded === true">
 
-				<span style="font-size: 40px; font-weight: bold;">{{ form.general.activity_name }}</span>
-				<span>Form ID: <span
-					style="display:inline; background: #e8e8e8; padding: 4px 10px; border-radius: 4px; font-size: 14px;">{{ formId }}</span></span>
+				<span style="font-size: 50px; font-weight: bold;">{{ form.general.activity_name }}</span>
+				<span>Form ID: <input
+					onclick="this.select()"
+					style="display:inline; background: #e8e8e8; padding: 6px 10px; border-radius: 4px; font-size: 14px; border: none; color: black;"
+					disabled
+					size="45"
+					v-bind:value="formId"
+				></span>
 				<br>
 				<div class="div-moved-in-style">
 					<h2>General Information</h2>
@@ -55,10 +60,14 @@
 					<div class="div-moved-in">
 						<h3>Approve this request</h3>
 						<br>
-						<input type="text" v-model="approvePassword" placeholder="Department password" class="text-input-styled">
-						<button @click="approve()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Approve</button>
-						<br>
-						<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
+						<div v-show="!showProcessingApproval">
+							<input type="password" v-model="approvePassword" placeholder="Department password" class="text-input-styled">
+							<button @click="approve()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Approve</button>
+							<button @click="unapprove()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Unapprove</button>
+							<br>
+							<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
+						</div>
+						<span v-show="showProcessingApproval">Please wait</span>
 					</div>
 				</div>
 				<br>
@@ -141,7 +150,8 @@
 
 
 <script>
-	import {serverHost} from '@/constants';
+	import { serverHost } from '@/constants';
+	import { isValidCookie, getASBPassword } from '@/utils.js';
 
 	export default {
 		data() {
@@ -151,6 +161,7 @@
 				notApprovedText: 'NO',
 				approvedText: 'YES',
 				badPassword: false,
+				showProcessingApproval: false,
 				approvePassword: '',
 				form: {
 					loaded: false,
@@ -173,12 +184,34 @@
 							...res.data
 						}
 
-						document.title = this.form.general.activity_name + ' - Activity Requests';
+						window.document.title = this.form.general.activity_name + ' - Activity Requests';
+						this.showProcessingApproval = false;
 
-					});
+					}).catch(e => {
+						window.document.title = 'View Form - Activity Requests';
+						this.showProcessingApproval = false;
+					})
 			},
 			approve() {
+				this.showProcessingApproval = true;
 				window.fetch(`${serverHost}/api/approve/${this.$route.params.id}`, {
+					method: 'POST',
+					body: JSON.stringify({ password: this.approvePassword }),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				})
+					.then(res => res.json())
+					.then(res => {
+						this.badPassword = (res.error === 'bad_password') ? true : false;
+						this.loadData();
+					});
+				
+				this.approvePassword = '';
+			},
+			unapprove() {
+				this.showProcessingApproval = true;
+				window.fetch(`${serverHost}/api/unapprove/${this.$route.params.id}`, {
 					method: 'POST',
 					body: JSON.stringify({ password: this.approvePassword }),
 					headers: {
@@ -196,6 +229,10 @@
 		},
 		mounted() {
 			this.loadData();
+
+			if (isValidCookie()) {
+				this.approvePassword = getASBPassword();
+			}
 		}
 	}
 </script>

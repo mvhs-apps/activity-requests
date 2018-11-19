@@ -1,6 +1,9 @@
 <template>
     <div>
-        <h1>All Requests</h1>
+        <div>
+            <h1 style="display: inline;">All Requests</h1>
+            <button class="btn-styled" @click="logout()" style="display: inline; float: right; width: 100px; font-size: 14px; height: 30px;">Logout</button>
+        </div>
         <div>
             <div
                 v-for="form of formsToDisplay"
@@ -35,7 +38,7 @@
 </template>
 
 <script>
-import { isValidCookie } from '@/utils.js';
+import { isValidCookie, deleteCookie, getASBPassword } from '@/utils.js';
 import { serverHost } from '@/constants.js';
 
 export default {
@@ -51,6 +54,10 @@ export default {
             forms.sort((a, b) => a.meta.date_submitted > b.meta.date_submitted);
             
             this.formsToDisplay = forms;
+        },
+        logout() {
+            deleteCookie();
+            this.$router.push({ path: '/' });
         }
     },
     beforeCreate() {
@@ -64,7 +71,7 @@ export default {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ authPassword: JSON.parse(localStorage.cookie).password })
+            body: JSON.stringify({ authPassword: getASBPassword() })
         })
             .then(res => res.json())
             .then(res => {
@@ -84,6 +91,7 @@ export default {
 }
 </script>
 
+<style scoped src="@/assets/btn-styled.css"></style>
 <style scoped>
     .each {
         max-width: 750px;

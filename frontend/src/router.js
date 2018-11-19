@@ -60,10 +60,7 @@ let router = new Router({
 		{
 			path: '/track/:id',
 			name: 'view-form',
-			component: ViewFormPage,
-			meta: {
-				title: 'View Form - Activity Requests'
-			}
+			component: ViewFormPage
 		},
 		{
 			path: '/asb',
@@ -97,7 +94,7 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-	window.document.title = to.meta.title;
+	if (to.meta.title) window.document.title = to.meta.title;
 	next();
 });
 

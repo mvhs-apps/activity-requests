@@ -118,6 +118,25 @@ router.post('/approve/:id', async (req, res) => {
 	}
 
 	res.json(responses.error('bad_password'));
+});
+router.post('/unapprove/:id', async (req, res) => {
+	let id = req.params.id;
+	let password = req.body.password;
+
+	let passwords = (await firebase.database().ref('/settings/passwords').once('value')).val();
+
+	for (let dept in passwords) {
+		if (passwords.hasOwnProperty(dept) && passwords[dept] === password) {
+
+			if (await doesFormExist(id)) {
+				firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).set(false);
+			}
+
+			return res.json(responses.success());
+		}
+	}
+
+	res.json(responses.error('bad_password'));
 
 });
 
@@ -130,9 +149,11 @@ router.post('/get-all-requests', (req, res) => {
 			firebase.database().ref('/forms/').once('value').then(snapshot => {
 				res.json(responses.success(snapshot.val()));
 			});
+		} else {
+			res.json(responses.error('bad_password'));
 		}
-		
 	});
+
 });
 
 router.post('/check-asb-password', async (req, res) => {

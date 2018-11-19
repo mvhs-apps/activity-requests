@@ -13,3 +13,15 @@ export function isValidCookie() {
         return false;
     }
 }
+
+export function deleteCookie() {
+    delete localStorage.cookie;
+}
+
+export function getASBPassword() {
+    try {
+        return JSON.parse(localStorage.cookie).password;
+    } catch (e) {
+        return '';
+    }
+}
