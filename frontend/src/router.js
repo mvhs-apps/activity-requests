@@ -8,6 +8,8 @@ import FormPage from './views/FormPage.vue';
 import ViewFormPage from './views/ViewFormPage.vue';
 import BadBrowserPage from './views/BadBrowserPage.vue';
 import FormSubmittedPage from './views/FormSubmittedPage.vue';
+import LoginVue from './views/asb/LoginVue.vue';
+import AllRequestsView from './views/asb/AllRequestsView.vue';
 
 Vue.use(Router)
 
@@ -61,6 +63,26 @@ let router = new Router({
 			component: ViewFormPage,
 			meta: {
 				title: 'View Form - Activity Requests'
+			}
+		},
+		{
+			path: '/asb',
+			redirect: '/asb/login'
+		},
+		{
+			path: '/asb/login',
+			name: 'asb-login',
+			component: LoginVue,
+			meta: {
+				title: 'ASB Login - Activity Requests'
+			}
+		},
+		{
+			path: '/asb/all-requests',
+			name: 'asb-all-requests',
+			component: AllRequestsView,
+			meta: {
+				title: 'All Requests - Activity Requests'
 			}
 		},
 		{

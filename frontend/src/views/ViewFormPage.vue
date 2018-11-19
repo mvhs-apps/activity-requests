@@ -55,8 +55,8 @@
 					<div class="div-moved-in">
 						<h3>Approve this request</h3>
 						<br>
-						<input type="text" v-model="approvePassword" placeholder="Department password" class="text-input">
-						<button @click="approve()" class="global-btn" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Approve</button>
+						<input type="text" v-model="approvePassword" placeholder="Department password" class="text-input-styled">
+						<button @click="approve()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Approve</button>
 						<br>
 						<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
 					</div>
@@ -200,7 +200,8 @@
 	}
 </script>
 
-
+<style scoped src="@/assets/text-input-styled.css"></style>
+<style scoped src="@/assets/btn-styled.css"></style>
 <style scoped>
 	.div-moved-in {
 		margin-top: 10px;
@@ -251,22 +252,4 @@
 		font-weight: bold;
 	}
 
-	.text-input {
-		/* border-radius: 6px; */
-		outline: none;
-		border: none;
-		font-size: 16px;
-		width: 300px;
-		height: 50px;
-		padding: 0 18px;
-		font-family: 'Avenir';
-		color: #3c4043;
-		background: #d1cfcf;
-		transition: all .2s ease;
-	}
-
-	.text-input:focus {
-		box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2), 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12);
-		background: #fff;
-	}
 </style>

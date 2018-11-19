@@ -135,4 +135,16 @@ router.post('/get-all-requests', (req, res) => {
 	});
 });
 
+router.post('/check-asb-password', async (req, res) => {
+
+	let password = (await firebase.database().ref('/settings/passwords/asb').once('value')).val();
+
+	if (password === req.body.password) {
+		res.json(responses.success());
+	} else {
+		res.json(responses.error('bad_password'));
+	}
+
+});
+
 module.exports = router;
