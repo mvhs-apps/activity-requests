@@ -150,91 +150,91 @@
 
 
 <script>
-	import { serverHost } from '@/constants';
-	import { isValidCookie, getASBPassword } from '@/utils.js';
+import { serverHost } from '@/constants';
+import { isValidCookie, getASBPassword } from '@/utils';
 
-	export default {
-		data() {
-			return {
-				formId: this.$route.params.id,
-				isValidForm: true,
-				notApprovedText: 'NO',
-				approvedText: 'YES',
-				badPassword: false,
-				showProcessingApproval: false,
-				approvePassword: '',
-				form: {
-					loaded: false,
-					student_email: ''
-				}
-			}
-		},
-		methods: {
-			loadData() {
-				window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
-					.then(res => res.json())
-					.then(res => {
-						if (!res.success && res.error === 'no_form_exists') {
-							this.isValidForm = false;
-							return;
-						}
-
-						this.form = {
-							loaded: true,
-							...res.data
-						}
-
-						window.document.title = this.form.general.activity_name + ' - Activity Requests';
-						this.showProcessingApproval = false;
-
-					}).catch(e => {
-						window.document.title = 'View Form - Activity Requests';
-						this.showProcessingApproval = false;
-					})
-			},
-			approve() {
-				this.showProcessingApproval = true;
-				window.fetch(`${serverHost}/api/approve/${this.$route.params.id}`, {
-					method: 'POST',
-					body: JSON.stringify({ password: this.approvePassword }),
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				})
-					.then(res => res.json())
-					.then(res => {
-						this.badPassword = (res.error === 'bad_password') ? true : false;
-						this.loadData();
-					});
-				
-				this.approvePassword = '';
-			},
-			unapprove() {
-				this.showProcessingApproval = true;
-				window.fetch(`${serverHost}/api/unapprove/${this.$route.params.id}`, {
-					method: 'POST',
-					body: JSON.stringify({ password: this.approvePassword }),
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				})
-					.then(res => res.json())
-					.then(res => {
-						this.badPassword = (res.error === 'bad_password') ? true : false;
-						this.loadData();
-					});
-				
-				this.approvePassword = '';
-			}
-		},
-		mounted() {
-			this.loadData();
-
-			if (isValidCookie()) {
-				this.approvePassword = getASBPassword();
+export default {
+	data() {
+		return {
+			formId: this.$route.params.id,
+			isValidForm: true,
+			notApprovedText: 'NO',
+			approvedText: 'YES',
+			badPassword: false,
+			showProcessingApproval: false,
+			approvePassword: '',
+			form: {
+				loaded: false,
+				student_email: ''
 			}
 		}
+	},
+	methods: {
+		loadData() {
+			window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
+				.then(res => res.json())
+				.then(res => {
+					if (!res.success && res.error === 'no_form_exists') {
+						this.isValidForm = false;
+						return;
+					}
+
+					this.form = {
+						loaded: true,
+						...res.data
+					}
+
+					window.document.title = this.form.general.activity_name + ' - Activity Requests';
+					this.showProcessingApproval = false;
+
+				}).catch(e => {
+					window.document.title = 'View Form - Activity Requests';
+					this.showProcessingApproval = false;
+				})
+		},
+		approve() {
+			this.showProcessingApproval = true;
+			window.fetch(`${serverHost}/api/approve/${this.$route.params.id}`, {
+				method: 'POST',
+				body: JSON.stringify({ password: this.approvePassword }),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+				.then(res => res.json())
+				.then(res => {
+					this.badPassword = (res.error === 'bad_password') ? true : false;
+					this.loadData();
+				});
+			
+			this.approvePassword = '';
+		},
+		unapprove() {
+			this.showProcessingApproval = true;
+			window.fetch(`${serverHost}/api/unapprove/${this.$route.params.id}`, {
+				method: 'POST',
+				body: JSON.stringify({ password: this.approvePassword }),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+				.then(res => res.json())
+				.then(res => {
+					this.badPassword = (res.error === 'bad_password') ? true : false;
+					this.loadData();
+				});
+			
+			this.approvePassword = '';
+		}
+	},
+	mounted() {
+		this.loadData();
+
+		if (isValidCookie()) {
+			this.approvePassword = getASBPassword();
+		}
 	}
+}
 </script>
 
 <style scoped src="@/assets/text-input-styled.css"></style>

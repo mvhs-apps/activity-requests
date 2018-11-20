@@ -25,3 +25,10 @@ export function getASBPassword() {
         return '';
     }
 }
+
+export function createCookie(password) {
+    localStorage.cookie = JSON.stringify({
+        password,
+        expires: Date.now() + (15 * 60 * 1000)
+    });
+}

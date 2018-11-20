@@ -14,6 +14,17 @@
 	</div>
 </template>
 
+<script>
+	import { serverHost } from '@/constants';	
+
+	export default {
+		created() {
+			window.fetch(`${serverHost}/api/wake-up`);
+		}
+	}
+</script>
+
+
 <style>
 	* {
 		padding: 0;

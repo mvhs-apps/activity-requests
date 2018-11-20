@@ -3,13 +3,14 @@
         <div>
             <h1 style="display: inline;">All Requests</h1>
             <button class="btn-styled" @click="logout()" style="display: inline; float: right; width: 100px; font-size: 14px; height: 30px;">Logout</button>
+            <button class="btn-styled" @click="$router.push({ path: '/asb/passwords' })" style="display: inline; float: right; width: 140px; font-size: 14px; height: 30px; margin-right: 10px;">Change passwords</button>
         </div>
         <div>
             <div
                 v-for="form of formsToDisplay"
                 v-bind:key="form.id"
                 class="each"
-                @click="$router.push({ path: '/track/' + form.id })"
+                @click="$router.push({ path: '/form/' + form.id })"
                 v-bind:style="{ borderLeft: '6px solid ' + (form.meta.approved.asb ? 'green' : 'red') }"
             >   
                 <div>
@@ -38,8 +39,8 @@
 </template>
 
 <script>
-import { isValidCookie, deleteCookie, getASBPassword } from '@/utils.js';
-import { serverHost } from '@/constants.js';
+import { isValidCookie, deleteCookie, getASBPassword } from '@/utils';
+import { serverHost } from '@/constants';
 
 export default {
     data() {
@@ -62,7 +63,7 @@ export default {
     },
     beforeCreate() {
         if (!isValidCookie()) {
-            this.$router.push({ path: '/asb/login' });
+            this.$router.push({ path: '/asb/login?continue=%2Fasb%2Fall-requests' });
         }
     },
     mounted() {

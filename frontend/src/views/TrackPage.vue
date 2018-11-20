@@ -14,22 +14,22 @@
 </template>
 
 <script>    
-	export default {
-		data() {
-			return {
-				requestId: ''
-			}
-		},
-		methods: {
-			goToPage() {
-				if (this.requestId.length === 40) {
-					this.$router.push({
-						path: '/track/' + this.requestId
-					});
-				}
+export default {
+	data() {
+		return {
+			requestId: ''
+		}
+	},
+	methods: {
+		goToPage() {
+			if (this.requestId.length === 40) {
+				this.$router.push({
+					path: '/form/' + this.requestId
+				});
 			}
 		}
 	}
+}
 </script>
 
 <style scoped src="@/assets/btn-styled.css"></style>

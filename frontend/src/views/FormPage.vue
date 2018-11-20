@@ -409,113 +409,112 @@
 </template>
 
 <script>
+import {serverHost} from '@/constants';
 
-	import {serverHost} from '@/constants';
-
-	export default {
-		data() {
-			return {
-				showForm: true,
-				validationHTML: '',
-				emailRegEx: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-				urlRegEx: /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
-				form: {
-					general: {
-						student_name: '',
-						activity_name: '',
-						club_name: '',
-						student_email: '',
-						advisor_email: '',
-						event_description: '',
-						start_date: '',
-						all_dates: '',
-						event_on_campus: 'select_one',
-						is_fundraiser: 'select_one'
-					},
-					campus: {
-						gym: false,
-						ccc: false,
-						cafeteria: false,
-						library: false,
-						classroom: false,
-						'classroom-extra-info': '',
-						theater: false,
-						location_on_campus: 'select_one',
-						screens: false,
-						'screens-extra-info': '',
-						tables: false,
-						'tables-extra-info': '',
-						cashboxes: false,
-						'cashboxes-extra-info': '',
-						setup_image: ''
-					},
-					fundraiser: {
-						fundraiser_type: 'select_one',
-					}
+export default {
+	data() {
+		return {
+			showForm: true,
+			validationHTML: '',
+			emailRegEx: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+			urlRegEx: /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
+			form: {
+				general: {
+					student_name: '',
+					activity_name: '',
+					club_name: '',
+					student_email: '',
+					advisor_email: '',
+					event_description: '',
+					start_date: '',
+					all_dates: '',
+					event_on_campus: 'select_one',
+					is_fundraiser: 'select_one'
+				},
+				campus: {
+					gym: false,
+					ccc: false,
+					cafeteria: false,
+					library: false,
+					classroom: false,
+					'classroom-extra-info': '',
+					theater: false,
+					location_on_campus: 'select_one',
+					screens: false,
+					'screens-extra-info': '',
+					tables: false,
+					'tables-extra-info': '',
+					cashboxes: false,
+					'cashboxes-extra-info': '',
+					setup_image: ''
+				},
+				fundraiser: {
+					fundraiser_type: 'select_one',
 				}
-			};
-		},
-		methods: {
-			scrollUp() {
-				window.scrollTo({
-					top: 0,
-					left: 0,
-					behavior: 'smooth'
-				});
-			},
-			submitForm() {
-
-				// validation
-				let f = this.form.general;
-				if (!f.student_name || !f.activity_name || !f.club_name || !f.student_email || !f.advisor_email || !f.event_description || !f.start_date || !f.all_dates) {
-					this.validationHTML = 'You didn\'t complete some fields in the \'General Information\' category';
-					return this.scrollUp();
-				}
-
-				if (this.form.general.event_on_campus === 'select_one') {
-					this.validationHTML = 'You must specifiy whether this activity will take place on campus.';
-					return this.scrollUp();
-				}
-
-				if (this.form.general.is_fundraiser === 'select_one') {
-					this.validationHTML = 'You must specifiy whether this activity is a fundraiser';
-					return this.scrollUp();
-				}
-
-				if (this.form.general.is_fundraiser === 'yes' && this.form.fundraiser.fundraiser_type === 'select_one') {
-					this.validationHTML = 'You must select the fundraiser type and complete the corresponding questions';
-					return this.scrollUp();
-				}
-
-
-				this.showForm = false;
-
-				window.fetch(`${serverHost}/api/submit-request`, {
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					method: 'POST',
-					body: JSON.stringify(this.form)
-				}).then(res => res.json()).then(res => {
-					console.log(res);
-					this.$router.push({
-						path: '/form-submitted/' + res.data
-					});
-				}).catch(err => console.log(err));
 			}
+		};
+	},
+	methods: {
+		scrollUp() {
+			window.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: 'smooth'
+			});
 		},
-		mounted() {
-			if (
-				/^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-				|| navigator.userAgent.match(/Trident.*rv\:11\./)
-				|| window.navigator.userAgent.indexOf('MSIE ') > -1
-			) {
+		submitForm() {
+
+			// validation
+			let f = this.form.general;
+			if (!f.student_name || !f.activity_name || !f.club_name || !f.student_email || !f.advisor_email || !f.event_description || !f.start_date || !f.all_dates) {
+				this.validationHTML = 'You didn\'t complete some fields in the \'General Information\' category';
+				return this.scrollUp();
+			}
+
+			if (this.form.general.event_on_campus === 'select_one') {
+				this.validationHTML = 'You must specifiy whether this activity will take place on campus.';
+				return this.scrollUp();
+			}
+
+			if (this.form.general.is_fundraiser === 'select_one') {
+				this.validationHTML = 'You must specifiy whether this activity is a fundraiser';
+				return this.scrollUp();
+			}
+
+			if (this.form.general.is_fundraiser === 'yes' && this.form.fundraiser.fundraiser_type === 'select_one') {
+				this.validationHTML = 'You must select the fundraiser type and complete the corresponding questions';
+				return this.scrollUp();
+			}
+
+
+			this.showForm = false;
+
+			window.fetch(`${serverHost}/api/submit-request`, {
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				method: 'POST',
+				body: JSON.stringify(this.form)
+			}).then(res => res.json()).then(res => {
+				console.log(res);
 				this.$router.push({
-					path: '/bad-browser'
+					path: '/form-submitted/' + res.data
 				});
-			}
+			}).catch(err => console.log(err));
+		}
+	},
+	mounted() {
+		if (
+			/^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+			|| navigator.userAgent.match(/Trident.*rv\:11\./)
+			|| window.navigator.userAgent.indexOf('MSIE ') > -1
+		) {
+			this.$router.push({
+				path: '/bad-browser'
+			});
 		}
 	}
+}
 </script>
 
 <style scoped src="@/assets/lds-roller.css"></style>

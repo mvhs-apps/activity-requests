@@ -8,8 +8,10 @@ import FormPage from './views/FormPage.vue';
 import ViewFormPage from './views/ViewFormPage.vue';
 import BadBrowserPage from './views/BadBrowserPage.vue';
 import FormSubmittedPage from './views/FormSubmittedPage.vue';
-import LoginVue from './views/asb/LoginVue.vue';
-import AllRequestsView from './views/asb/AllRequestsView.vue';
+import LoginPage from './views/asb/LoginPage.vue';
+import AllRequestsPage from './views/asb/AllRequestsPage.vue';
+import PasswordsPage from './views/asb/PasswordsPage.vue';
+import NotFoundPage from './views/NotFoundPage.vue';
 
 Vue.use(Router)
 
@@ -58,7 +60,7 @@ let router = new Router({
 			}
 		},
 		{
-			path: '/track/:id',
+			path: '/form/:id',
 			name: 'view-form',
 			component: ViewFormPage
 		},
@@ -69,7 +71,7 @@ let router = new Router({
 		{
 			path: '/asb/login',
 			name: 'asb-login',
-			component: LoginVue,
+			component: LoginPage,
 			meta: {
 				title: 'ASB Login - Activity Requests'
 			}
@@ -77,9 +79,17 @@ let router = new Router({
 		{
 			path: '/asb/all-requests',
 			name: 'asb-all-requests',
-			component: AllRequestsView,
+			component: AllRequestsPage,
 			meta: {
 				title: 'All Requests - Activity Requests'
+			}
+		},
+		{
+			path: '/asb/passwords',
+			name: 'asb-passwords',
+			component: PasswordsPage,
+			meta: {
+				title: 'Passwords - Activity Requests'
 			}
 		},
 		{
@@ -88,6 +98,14 @@ let router = new Router({
 			component: BadBrowserPage,
 			meta: {
 				title: 'Bad Browser - Activity Requests'
+			}
+		},
+		{
+			path: '*',
+			name: 'not-found',
+			component: NotFoundPage,
+			meta: {
+				title: 'Not Found - Activity Requests'
 			}
 		}
 	]

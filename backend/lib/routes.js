@@ -165,7 +165,10 @@ router.post('/check-asb-password', async (req, res) => {
 	} else {
 		res.json(responses.error('bad_password'));
 	}
+});
 
+router.get('/wake-up', (req, res) => {
+	res.json(responses.success('waking_up'));
 });
 
 module.exports = router;
