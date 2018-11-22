@@ -151,7 +151,6 @@
 
 <script>
 import { serverHost } from '@/constants';
-import { isValidCookie, getASBPassword } from '@/utils';
 
 export default {
 	data() {
@@ -227,12 +226,8 @@ export default {
 			this.approvePassword = '';
 		}
 	},
-	mounted() {
+	created() {
 		this.loadData();
-
-		if (isValidCookie()) {
-			this.approvePassword = getASBPassword();
-		}
 	}
 }
 </script>

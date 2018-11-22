@@ -1,5 +1,9 @@
 const firebase = require('firebase');
 const crypto = require('crypto');
+
+const fetch = require('node-fetch');
+const { URLSearchParams } = require('url');
+
 const router = require('express').Router();
 const mailer = require('./mailer');
 const emails = require('./emails');
@@ -29,26 +33,40 @@ router.get('/get-request/:id', (req, res) => {
 	});
 });
 
-router.post('/submit-request', (req, res) => {
-	let form = req.body;
+router.post('/submit-request', async (req, res) => {
+	let form = req.body.form;
 	let id = generateId(40);
 
 	// TODO: idk maybe add some more validation???
 
 	let f = form.general;
-	if (!f.student_name || !f.activity_name || !f.club_name || !emailRegEx.test(f.student_email) || !emailRegEx.test(f.advisor_email) || !f.event_description || !f.start_date || !f.all_dates) {
-		return res.json(responses.json('bad_information'));
+	if (!f.student_name || !f.activity_name || !f.club_name || !emailRegEx.test(f.student_email) || !emailRegEx.test(f.advisor_email) || !f.event_description || !f.start_date || !f.all_dates || !req.body.recaptchaToken) {
+		return res.json(responses.error('bad_information'));
 	}
 
 	// do not remove the following line; very important for security
-	req.body.meta = {
+	form.meta = {
 		date_submitted: Date.now(),
 		approved: {
 			asb: false
 		}
 	}
 
-	firebase.database().ref(`/forms/${id}`).set(form, err => {
+	// verify the recaptcha
+	let params = new URLSearchParams();
+	params.append('secret', process.env.RECAPTCHA_SECRET);
+	params.append('response', req.body.recaptchaToken);
+
+	let recaptchaVerification = await (await fetch('https://www.google.com/recaptcha/api/siteverify', {
+		method: 'POST',
+		body: params
+	})).json();
+
+	if (!recaptchaVerification.success) {
+		return res.json(responses.error('bad_recaptcha'));
+	}
+
+	firebase.database().ref(`/forms/${id}`).set(form, async err => {
 		if (err) {
 			res.json(responses.error('error_writing_data'));
 		} else {
@@ -74,8 +92,8 @@ router.post('/submit-request', (req, res) => {
 				})
 			});
 
-			Promise.all( [a, b] ).then(_ => res.json(responses.success(id)) );
-			// res.json(responses.success(id));
+			await Promise.all( [a, b] );
+			res.json(responses.success(id));
 		}
 	});
 });

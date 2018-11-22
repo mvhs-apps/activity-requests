@@ -386,7 +386,8 @@
 					</div>
 				</div>
 			</div>
-
+			<br>
+			<div style="margin-left: 100px;" id="recaptcha-div"></div><br><br><br>
 			<button id="submit-button" @click="submitForm()">Submit this request</button>
 		</div>
 
@@ -418,6 +419,7 @@ export default {
 			validationHTML: '',
 			emailRegEx: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 			urlRegEx: /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
+			recaptchaToken: '',
 			form: {
 				general: {
 					student_name: '',
@@ -455,6 +457,19 @@ export default {
 		};
 	},
 	methods: {
+		initRecaptcha() {
+			setTimeout(() => {
+				if (typeof grecaptcha === 'undefined' || typeof grecaptcha.render === 'undefined') {
+					return this.initRecaptcha()
+				}
+				
+				grecaptcha.render('recaptcha-div', {
+					sitekey: '6Le4XXwUAAAAAG4U7aAFDJwn-J3c352Hgs5hSqOE',
+					callback: token => this.recaptchaToken = token
+				});
+
+			}, 100);
+		},
 		scrollUp() {
 			window.scrollTo({
 				top: 0,
@@ -463,6 +478,11 @@ export default {
 			});
 		},
 		submitForm() {
+
+			if (!this.recaptchaToken) {
+				this.validationHTML = 'Please check the \'I\'m not a robot\' checkbox';
+				return this.scrollUp();
+			}
 
 			// validation
 			let f = this.form.general;
@@ -494,16 +514,21 @@ export default {
 					'Content-Type': 'application/json'
 				},
 				method: 'POST',
-				body: JSON.stringify(this.form)
+				body: JSON.stringify({
+					recaptchaToken: this.recaptchaToken,
+					form: this.form
+				})
 			}).then(res => res.json()).then(res => {
 				console.log(res);
-				this.$router.push({
-					path: '/form-submitted/' + res.data
-				});
+				if (res.success) {
+					this.$router.push({
+						path: '/form-submitted/' + res.data
+					});
+				}
 			}).catch(err => console.log(err));
 		}
 	},
-	mounted() {
+	created() {
 		if (
 			/^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 			|| navigator.userAgent.match(/Trident.*rv\:11\./)
@@ -513,6 +538,19 @@ export default {
 				path: '/bad-browser'
 			});
 		}
+	},
+	mounted() {
+
+		// add recaptcha library
+		if (typeof grecaptcha === 'undefined') {
+			let script = document.createElement('script');
+			script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+			script.async = 'true';
+			script.defer = 'true';
+			document.body.append(script);
+		}
+
+		this.initRecaptcha();
 	}
 }
 </script>

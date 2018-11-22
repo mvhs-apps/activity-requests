@@ -5,56 +5,62 @@
             <button class="btn-styled" @click="logout()" style="display: inline; float: right; width: 100px; font-size: 14px; height: 30px;">Logout</button>
             <button class="btn-styled" @click="$router.push({ path: '/asb/passwords' })" style="display: inline; float: right; width: 140px; font-size: 14px; height: 30px; margin-right: 10px;">Change passwords</button>
         </div>
+        <div style="margin: 10px; display: flex; flex-wrap: wrap; justify-content: flex-start;">
+            <a @click="loadByDateSubmitted()">Show all</a>
+            <a @click="loadOnlyApproved()">Show approved</a>
+            <a @click="loadOnlyUnapproved()">Show unapproved</a>
+            <a @click="sortByClubName()">Sort by club name</a>
+        </div>
         <div>
-            <div
+            <Request
                 v-for="form of formsToDisplay"
                 v-bind:key="form.id"
-                class="each"
-                @click="$router.push({ path: '/form/' + form.id })"
-                v-bind:style="{ borderLeft: '6px solid ' + (form.meta.approved.asb ? 'green' : 'red') }"
-            >   
-                <div>
-                    <h2 style="font-weight: bold; font-size: 26px; display: inline;">{{ form.general.activity_name }}</h2>
-                    <span style="float: right; font-weight: bold; font-size: 14px; color: green;" v-if="form.meta.approved.asb">ASB APPROVED</span>
-                    <span style="float: right; font-weight: bold; font-size: 14px; color: red;" v-else>NOT ASB APPROVED</span>
-                </div>
-                <p>Submitted by: {{ form.general.student_name }}</p>
-                <p>Club name: {{ form.general.club_name }}</p>
-                <p>Submitted on: {{ (new Date(form.meta.date_submitted)).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    timeZone: 'America/Los_Angeles',
-                    hour12: true,
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    }) }}
-                </p>
-
-            </div>
+                v-bind:form="form"
+            />
         </div>
-
     </div>
 </template>
 
 <script>
 import { isValidCookie, deleteCookie, getASBPassword } from '@/utils';
 import { serverHost } from '@/constants';
+import Request from './components/Request.vue';
 
 export default {
+    components: {
+        Request
+    },
     data() {
         return {
-            allForms: {},
+            allForms: [],
             formsToDisplay: []
         }
     },
     methods: {
         loadByDateSubmitted() {
-            let forms = JSON.parse(JSON.stringify(this.allForms));
-            forms.sort((a, b) => a.meta.date_submitted > b.meta.date_submitted);
-            
-            this.formsToDisplay = forms;
+            this.formsToDisplay = this.getSortedForms();
+        },
+        loadOnlyApproved() {
+            this.formsToDisplay = this.getSortedForms().filter(form => form.meta.approved.asb);
+        },
+        loadOnlyUnapproved() {
+            this.formsToDisplay = this.getSortedForms().filter(form => !form.meta.approved.asb);
+        },
+        sortByClubName() {
+            this.formsToDisplay = this.getSortedForms().sort((a, b) => {
+                let aName = a.general.club_name.toLowerCase();
+                let bName = b.general.club_name.toLowerCase();
+
+                if (aName > bName) {
+                    return 1;
+                } else if (aName < bName) {
+                    return -1;
+                }
+                return 0;
+            });
+        },
+        getSortedForms() {
+            return JSON.parse(JSON.stringify(this.allForms));
         },
         logout() {
             deleteCookie();
@@ -84,6 +90,14 @@ export default {
                         forms.push(res.data[form]);
                     }
                 }
+                forms.sort((a, b) => {
+                    if (a.meta.date_submitted < b.meta.date_submitted) {
+                        return 1;
+                    } else if (a.meta.date_submitted > b.meta.date_submitted) {
+                        return -1;
+                    }
+                    return 0;
+                });
                 this.allForms = forms;
 
                 this.loadByDateSubmitted();
@@ -94,26 +108,13 @@ export default {
 
 <style scoped src="@/assets/btn-styled.css"></style>
 <style scoped>
-    .each {
-        max-width: 750px;
-		margin-top: 10px;
-		margin-left: 16px;
-		padding: 18px;
-        border-radius: 8px;
-		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-        transition: box-shadow .2s ease;
-        cursor: pointer;
-        transition: .2s ease all;
-        background: white;
-        margin: 20px 0;
-    }
-
-    .each:hover > div > h2 {
-        text-decoration: underline #fccb0b;
-    }
-
     a {
         cursor: pointer;
         color: #1a73e8;
+        margin: 0 10px;
+    }
+    a:hover {
+        text-decoration: underline #1a73e8;
     }
 </style>
+
