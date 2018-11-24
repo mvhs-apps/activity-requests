@@ -7,7 +7,7 @@ dist/
 .env.*.local
 .env
 
-firebase.json
+backend/lib/firebase.json
 
 # Log files
 npm-debug.log*

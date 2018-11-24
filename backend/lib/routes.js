@@ -137,6 +137,7 @@ router.post('/approve/:id', async (req, res) => {
 
 	res.json(responses.error('bad_password'));
 });
+
 router.post('/unapprove/:id', async (req, res) => {
 	let id = req.params.id;
 	let password = req.body.password;
@@ -185,8 +186,10 @@ router.post('/check-asb-password', async (req, res) => {
 	}
 });
 
+// for heroku, wakes up the server so the user doesn't have to wait later
 router.get('/wake-up', (req, res) => {
 	res.json(responses.success('waking_up'));
 });
+
 
 module.exports = router;

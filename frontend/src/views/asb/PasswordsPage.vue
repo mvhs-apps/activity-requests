@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>Update passwords</h1>
-        <p>Current passwords are not displayed here. If you would like to view a current password, contact a one of the student developers.</p>
+        <p>Current passwords are not displayed here. If you would like to view a current password, contact one of the student developers.</p>
         <span style="display: block; color: green; font-weight: bold; font-size: 22px;" v-show="success"><br>Password changed successfully!</span>
         <span style="display: block; color: red; font-weight: bold; font-size: 22px;" v-show="badPassword"><br>Your current ASB password is incorrect</span>
         <span style="display: block; color: red; font-weight: bold; font-size: 22px;" v-show="serverDown"><br>Server is having issues writing data :( Please report this and try again later.</span>

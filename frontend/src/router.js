@@ -12,6 +12,7 @@ import LoginPage from './views/asb/LoginPage.vue';
 import AllRequestsPage from './views/asb/AllRequestsPage.vue';
 import PasswordsPage from './views/asb/PasswordsPage.vue';
 import NotFoundPage from './views/NotFoundPage.vue';
+import HelpPage from './views/HelpPage.vue';
 
 Vue.use(Router)
 
@@ -33,6 +34,14 @@ let router = new Router({
 			component: StartForm,
 			meta: {
 				title: 'Form - Activity Requests'
+			}
+		},
+		{
+			path: '/help',
+			name: 'help',
+			component: HelpPage,
+			meta: {
+				title: 'Help - Activity Requests'
 			}
 		},
 		{

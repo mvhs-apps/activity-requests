@@ -64,7 +64,7 @@ export default {
         },
         logout() {
             deleteCookie();
-            this.$router.push({ path: '/' });
+            this.$router.push({ path: '/asb' });
         }
     },
     beforeCreate() {
