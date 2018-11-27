@@ -17,7 +17,7 @@
         <p>Submitted on: {{ (new Date(form.meta.date_submitted)).toLocaleDateString('en-US', {
             //weekday: 'long',
             year: 'numeric',
-            month: 'long',
+            month: 'short',
             day: 'numeric',
             timeZone: 'America/Los_Angeles',
             hour12: true,

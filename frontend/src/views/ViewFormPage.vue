@@ -18,7 +18,14 @@
 					<span>Student email: {{ form.general.student_email }}</span>
 					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
 					<span>Description: {{ form.general.event_description }}</span>
-					<span>Start Date: {{ ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][new Date(form.general.start_date).getDay()] + ', ' + form.general.start_date }}</span>
+					<span>Start Date: {{ new Date(form.general.start_date).toLocaleDateString('en-US', {
+							weekday: 'short',
+							year: 'numeric',
+							month: 'short',
+							day: 'numeric',
+							timeZone: 'America/Los_Angeles',
+						}) }}
+					</span>
 					<span>Other Dates &amp; Times: {{ form.general.all_dates }}</span>
 				</div>
 				<br>
