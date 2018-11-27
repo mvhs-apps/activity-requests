@@ -11,7 +11,11 @@ const emails = require('./emails');
 const responses = require('./responses');
 const emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-firebase.initializeApp(require('./firebase.json'));
+if (process.env.NODE_ENV === 'production') {
+	firebase.initializeApp(JSON.parse(process.env.FIREBASE_CREDENTIALS))
+} else {
+	firebase.initializeApp(require('./firebase.json'));
+}
 
 function generateId(length) {
 	return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
