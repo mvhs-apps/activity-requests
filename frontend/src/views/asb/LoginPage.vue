@@ -35,7 +35,6 @@ export default {
                 .then(res => {
                     if (res.success) {
                         createCookie(this.password);
-                        this.badPassword = false;
                         this.$router.push({
                             path: this.$route.query.continue || '/asb/all-requests'
                         });

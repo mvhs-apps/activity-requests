@@ -1,34 +1,47 @@
-export function isValidCookie() {
-    try {
-        let cookie = JSON.parse(localStorage.cookie);
-    
-        if  (cookie.expires > Date.now()) {
-            return true;
-        }
-
-        delete localStorage.cookie;
-        return false;
-    } catch (e) {
-        delete localStorage.cookie;
-        return false;
+if (!window.activityRequests) {
+    window.activityRequests = {
+        map: {}
     }
+}
+
+export function isValidCookie() {
+    return !!window.activityRequests.asbPassword;
 }
 
 export function deleteCookie() {
-    delete localStorage.cookie;
+    delete window.activityRequests.asbPassword;
 }
 
 export function getASBPassword() {
-    try {
-        return JSON.parse(localStorage.cookie).password;
-    } catch (e) {
-        return '';
-    }
+    return window.activityRequests.asbPassword || '';
 }
 
 export function createCookie(password) {
-    localStorage.cookie = JSON.stringify({
-        password,
-        expires: Date.now() + (15 * 60 * 1000)
-    });
+    window.activityRequests.asbPassword = password;
+}
+
+
+export function cacheForm(id, data) {
+    window.activityRequests.formCache[id] = data;
+}
+
+export function getCachedForm(id) {
+    return window.activityRequests.formCache[id];
+}
+
+export function deleteCachedForm(id) {
+    delete window.activityRequests.formCache[id];
+}
+
+
+export function put(key, value) {
+    window.activityRequests.map[key] = value;
+}
+
+export function get(key) {
+    return window.activityRequests.map[key];
+}
+
+export function remove(key) {
+    delete window.activityRequests.map[key];
 }

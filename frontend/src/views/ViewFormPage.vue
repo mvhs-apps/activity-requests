@@ -17,6 +17,7 @@
 					<span>Student requester: {{ form.general.student_name }}</span>
 					<span>Student email: {{ form.general.student_email }}</span>
 					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
+					<span>Club name: {{ form.general.club_name }}</span>
 					<span>Description: {{ form.general.event_description }}</span>
 					<span>Start Date: {{ new Date(form.general.start_date).toLocaleDateString('en-US', {
 							weekday: 'short',
@@ -157,6 +158,7 @@
 
 
 <script>
+import { get, put, remove} from '@/utils';
 import { serverHost } from '@/constants';
 
 export default {
@@ -176,61 +178,75 @@ export default {
 		}
 	},
 	methods: {
-		loadData() {
-			window.fetch(`${serverHost}/api/get-request/${this.$route.params.id}`)
-				.then(res => res.json())
-				.then(res => {
-					if (!res.success && res.error === 'no_form_exists') {
-						this.isValidForm = false;
-						return;
-					}
+		async loadData() {
+			let res;
 
-					this.form = {
-						loaded: true,
-						...res.data
-					}
+			if (get(this.formId)) {
+				res = get(this.formId)
+			} else {
 
-					window.document.title = this.form.general.activity_name + ' - Activity Requests';
-					this.showProcessingApproval = false;
+				res = await window.fetch(`${serverHost}/api/get-request/${this.formId}`);
+				res = await res.json();
 
-				}).catch(e => {
-					window.document.title = 'View Form - Activity Requests';
-					this.showProcessingApproval = false;
-				})
+				if (!res.success && res.error === 'no_form_exists') {
+					this.isValidForm = false;
+					return;
+				}
+
+				put(this.formId, res.data);
+
+				res = res.data;
+			}
+
+			this.form = {
+				loaded: true,
+				...res
+			}
+
+			window.document.title = this.form.general.activity_name + ' - Activity Requests';
+			this.showProcessingApproval = false;
 		},
-		approve() {
+		async approve() {
+			let password = this.approvePassword;
+			this.approvePassword = '';
 			this.showProcessingApproval = true;
-			window.fetch(`${serverHost}/api/approve/${this.$route.params.id}`, {
+
+			let res = await window.fetch(`${serverHost}/api/approve/${this.formId}`, {
 				method: 'POST',
-				body: JSON.stringify({ password: this.approvePassword }),
+				body: JSON.stringify({ password }),
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			})
-				.then(res => res.json())
-				.then(res => {
-					this.badPassword = (res.error === 'bad_password') ? true : false;
-					this.loadData();
-				});
+			});
+
+			res = await res.json();
 			
-			this.approvePassword = '';
+			this.badPassword = (res.error === 'bad_password') ? true : false;
+			remove('all-forms');
+			remove(this.formId);
+			this.loadData();
+			
 		},
-		unapprove() {
+		async unapprove() {
+			let password = this.approvePassword;
+			this.approvePassword = '';
 			this.showProcessingApproval = true;
-			window.fetch(`${serverHost}/api/unapprove/${this.$route.params.id}`, {
+
+			let res = await window.fetch(`${serverHost}/api/unapprove/${this.formId}`, {
 				method: 'POST',
-				body: JSON.stringify({ password: this.approvePassword }),
+				body: JSON.stringify({ password }),
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			})
-				.then(res => res.json())
-				.then(res => {
-					this.badPassword = (res.error === 'bad_password') ? true : false;
-					this.loadData();
-				});
+			});
+
+			res = await res.json();
 			
-			this.approvePassword = '';
+			this.badPassword = (res.error === 'bad_password') ? true : false;
+			remove('all-forms');
+			remove(this.formId);
+			this.loadData();
+			
 		}
 	},
 	created() {

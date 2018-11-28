@@ -6,6 +6,9 @@
             <button class="btn-styled" @click="$router.push({ path: '/asb/passwords' })" style="display: inline; float: right; width: 140px; font-size: 14px; height: 30px; margin-right: 10px;">Change passwords</button>
         </div>
         <div style="margin: 10px; display: flex; flex-wrap: wrap; justify-content: flex-start;">
+            <a @click="refresh()" style="color: green;">Refresh content</a>
+        </div>
+        <div style="margin: 10px; display: flex; flex-wrap: wrap; justify-content: flex-start;">
             <a @click="loadByDateSubmitted()">Show all</a>
             <a @click="loadOnlyApproved()">Show approved</a>
             <a @click="loadOnlyUnapproved()">Show unapproved</a>
@@ -22,7 +25,7 @@
 </template>
 
 <script>
-import { isValidCookie, deleteCookie, getASBPassword } from '@/utils';
+import { isValidCookie, deleteCookie, getASBPassword, put, get } from '@/utils';
 import { serverHost } from '@/constants';
 import Request from './components/Request.vue';
 
@@ -62,6 +65,46 @@ export default {
         getSortedForms() {
             return JSON.parse(JSON.stringify(this.allForms));
         },
+        async loadContent() {
+            let res = await window.fetch(`${serverHost}/api/get-all-requests`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ authPassword: getASBPassword() })
+            });
+            res = await res.json();
+            
+            let forms = [];
+
+            for (let form in res.data) {
+                if (res.data.hasOwnProperty(form)) {
+                    res.data[form].id = form;
+                    forms.push(res.data[form]);
+                }
+            }
+            forms.sort((a, b) => {
+                if (a.meta.date_submitted < b.meta.date_submitted) {
+                    return 1;
+                } else if (a.meta.date_submitted > b.meta.date_submitted) {
+                    return -1;
+                }
+                return 0;
+            });
+            this.allForms = forms;
+
+            put('all-forms', forms);
+
+        },
+        async refresh() {
+
+            // just to show them that it is loading
+            this.allForms = [];
+            this.loadByDateSubmitted();
+            
+            await this.loadContent();
+            this.loadByDateSubmitted();
+        },
         logout() {
             deleteCookie();
             this.$router.push({ path: '/asb' });
@@ -72,36 +115,18 @@ export default {
             this.$router.push({ path: '/asb/login?continue=%2Fasb%2Fall-requests' });
         }
     },
-    mounted() {
-        window.fetch(`${serverHost}/api/get-all-requests`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ authPassword: getASBPassword() })
-        })
-            .then(res => res.json())
-            .then(res => {
-                let forms = [];
+    async mounted() {
 
-                for (let form in res.data) {
-                    if (res.data.hasOwnProperty(form)) {
-                        res.data[form].id = form;
-                        forms.push(res.data[form]);
-                    }
-                }
-                forms.sort((a, b) => {
-                    if (a.meta.date_submitted < b.meta.date_submitted) {
-                        return 1;
-                    } else if (a.meta.date_submitted > b.meta.date_submitted) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                this.allForms = forms;
+        if (!isValidCookie())
+            return;
 
-                this.loadByDateSubmitted();
-            });
+        if (get('all-forms')) {
+            this.allForms = get('all-forms');
+        } else {
+            await this.loadContent()
+        }
+
+        this.loadByDateSubmitted();
     }
 }
 </script>
