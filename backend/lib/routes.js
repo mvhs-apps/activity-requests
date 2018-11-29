@@ -132,7 +132,10 @@ router.post('/approve/:id', async (req, res) => {
 		if (passwords.hasOwnProperty(dept) && passwords[dept] === password) {
 
 			if (await doesFormExist(id)) {
-				firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).set(true);
+				firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).set({
+					approved: true,
+					time: Date.now()
+				});
 			}
 			
 			return res.json(responses.success());
@@ -152,7 +155,7 @@ router.post('/unapprove/:id', async (req, res) => {
 		if (passwords.hasOwnProperty(dept) && passwords[dept] === password) {
 
 			if (await doesFormExist(id)) {
-				firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).set(false);
+				firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).remove();
 			}
 
 			return res.json(responses.success());

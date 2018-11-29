@@ -57,8 +57,8 @@
 						<span class="input-title" style="margin-bottom: 0;">Start date of event</span>
 						<span class="input-subtitle">This can be the day of the event or, if your event spans multiple days, the first day of the event</span>
 						<input type="date" v-model.trim="form.general.start_date" placeholder="mm/dd/yyyy">
-						<span class="feedback" style="color: #d50000;" v-show="new Date(form.general.start_date) < Date.now()">
-							Please enter a date in the future
+						<span class="feedback" style="color: #d50000;" v-show="(new Date(form.general.start_date)).getTime() < (Date.now() + 1209600000)">
+							Please enter a date that is more than two weeks away
 						</span>
 					</div>
 				</div>
@@ -85,7 +85,7 @@
 				</div>
 				<div class="input-area">
 					<div class="select-input">
-						<span class="input-title">Is your event a fundraiser?</span>
+						<span class="input-title">Is your event a fundraiser or a donation drive?</span>
 						<select v-model="form.general.is_fundraiser">
 							<option value="select_one" disabled>Select one</option>
 							<option value="yes">Yes</option>
@@ -98,7 +98,8 @@
 			<span v-show="form.general.event_on_campus === 'yes'" class="form-section-title">Campus Questions</span>
 			<div v-show="form.general.event_on_campus === 'yes'" class="input-group">
 				<div class="checkbox-input">
-					<span class="input-title">Please select desired facilities</span>
+					<span class="input-title" style="margin-bottom: 0;">Please select desired special facilities</span>
+					<span class="input-subtitle" style="color: black;">All of the following facilities <span style="font-weight: bold;">require special approval</span> to be used during your event</span>
 					<div class="md-checkbox">
 						<input type="checkbox" v-model="form.campus.gym" id="gym-checkbox">
 						<label for="gym-checkbox">Gym/fields</label>
@@ -151,6 +152,7 @@
 						</div>
 						<select v-model="form.campus.location_on_campus">
 							<option value="select_one" disabled>Select one</option>
+							<option value="not_applicable">Already answered above</option>
 							<option value="tennis_court_1">Tennis Court #1</option>
 							<option value="tennis_court_2">Tennis Court #2</option>
 							<option value="tennis_court_3">Tennis Court #3</option>
@@ -207,8 +209,8 @@
 								<span class="input-subtitle">Enter a number between 1 and 25</span>
 								<input type="number" min="1" max="25" v-model="form.campus['tables-extra-info']"
 											 placeholder="Number here">
-								<span class="feedback" v-show="form.campus['tables-extra-info'] < 1 || form.campus['tables-extra-info'] > 25">
-									Please enter a number between 1 and 25
+								<span class="feedback" v-show="form.campus['tables-extra-info'] < 1 || form.campus['tables-extra-info'] > 100">
+									Please enter a number between 1 and 100
 								</span>
 							</div>
 						</div>
@@ -227,6 +229,10 @@
 								</span>
 							</div>
 						</div>
+						<div class="md-checkbox">
+							<input type="checkbox" v-model="form.campus.speakers" id="speakers-checkbox">
+							<label for="speakers-checkbox">Speakers</label>
+						</div>
 					</div>
 				</div>
 				<div class="input-area">
@@ -237,6 +243,21 @@
 						<span class="feedback" v-show="form.campus.setup_image && !urlRegEx.test(form.campus.setup_image)">
 							Please enter a valid url
 						</span>
+					</div>
+				</div>
+				<div class="md-checkbox">
+					<input type="checkbox" v-model="form.campus.includes_food" id="food-checkbox">
+					<label for="food-checkbox">This event includes food (food sales or free food)</label>
+				</div>
+				<div class="input-area checkbox-extension" v-show="form.campus.includes_food">
+					<div class="text-input">
+						<span class="input-title" style="margin-bottom: 0;">Provide a thorough description of the food by answering the following</span>
+						<span class="input-subtitle">
+							What items will you be selling/giving away?<br>
+							Are these items homemade or store-bought?<br>
+							How much food do you plan on selling/giving away?<br>
+						</span>
+						<textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.campus.includes_food_extra_info" placeholder="Write here"></textarea>
 					</div>
 				</div>
 			</div>
@@ -829,5 +850,9 @@ export default {
 
 	.md-checkbox input[type="checkbox"]:disabled:checked + label:before {
 		background: rgba(0, 0, 0, 0.26);
+	}
+
+	label {
+		margin-left: 10px;
 	}
 </style>

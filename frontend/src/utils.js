@@ -4,6 +4,7 @@ if (!window.activityRequests) {
     }
 }
 
+
 export function isValidCookie() {
     return !!window.activityRequests.asbPassword;
 }
@@ -21,6 +22,7 @@ export function createCookie(password) {
 }
 
 
+
 export function cacheForm(id, data) {
     window.activityRequests.formCache[id] = data;
 }
@@ -32,6 +34,8 @@ export function getCachedForm(id) {
 export function deleteCachedForm(id) {
     delete window.activityRequests.formCache[id];
 }
+
+
 
 
 export function put(key, value) {

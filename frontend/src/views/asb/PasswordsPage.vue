@@ -11,7 +11,8 @@
         <h4>Select the password to change</h4>
         <select class="select-input" v-model="selectInput">
             <option value="select_one" disabled>Select one</option>
-            <option value="asb">ASB Main Password</option>
+            <option value="asb-director">ASB Director Password</option>
+            <option value="asb">ASB Password</option>
             <option value="library">Library</option>
             <option value="ccc">College and Career Center</option>
             <option value="gym">Athletics/PE department (gym)</option>

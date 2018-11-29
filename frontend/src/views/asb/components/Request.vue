@@ -1,16 +1,16 @@
 <template>
     <div
         @click="$router.push({ path: '/form/' + form.id })"
-        v-bind:style="{ borderLeft: '6px solid ' + (form.meta.approved.asb ? 'green' : 'red') }"
+        v-bind:style="{ borderLeft: '6px solid ' + (form.meta.approved.admin ? 'green' : 'red') }"
         class="request"
     >
         <div>
             <h2
                 style="font-weight: bold; font-size: 26px; display: inline;"
-                v-bind:style="{ textDecorationColor: form.meta.approved.asb ? 'green' : 'red'}"
+                v-bind:style="{ textDecorationColor: form.meta.approved.admin ? 'green' : 'red'}"
             >{{ form.general.activity_name }}</h2>
-            <span style="float: right; font-weight: bold; font-size: 14px; color: green;" v-if="form.meta.approved.asb">ASB APPROVED</span>
-            <span style="float: right; font-weight: bold; font-size: 14px; color: red;" v-else>NOT ASB APPROVED</span>
+            <span style="float: right; font-weight: bold; font-size: 14px; color: green;" v-if="form.meta.approved.admin">ADMIN APPROVED</span>
+            <span style="float: right; font-weight: bold; font-size: 14px; color: red;" v-else>NOT ADMIN APPROVED</span>
         </div>
         <p>Submitted by: {{ form.general.student_name }}</p>
         <p>Club name: {{ form.general.club_name }}</p>

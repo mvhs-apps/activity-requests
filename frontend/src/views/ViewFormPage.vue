@@ -35,6 +35,11 @@
 					<span>This acitvity <span style="display: inline; font-weight: bold;">cannot</span> occur without the approval of all of the following:</span>
 					<br>
 					<div>
+						<span>Admin approval: </span>
+						<span v-if="form.meta.approved.admin" class="approved">{{ approvedText }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
+					<div>
 						<span>ASB approval: </span>
 						<span v-if="form.meta.approved.asb" class="approved">{{ approvedText }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
@@ -142,6 +147,11 @@
 						<span v-if="form.campus.cashboxes">Wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
 						<span v-if="form.campus.screens">Wants {{ form.campus['screens-extra-info'] }} screens/projectors</span>
 						<span v-if="form.campus.tables">Wants {{ form.campus['tables-extra-info'] }} tables</span>
+						<span v-if="form.campus.speakers">Wants speakers</span>
+					</div>
+					<div class="div-moved-in" v-if="form.campus.includes_food">
+						<h3>Food Involved</h3>
+						<span>{{ form.campus.includes_food_extra_info }}</span>
 					</div>
 				</div>
 
