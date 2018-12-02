@@ -5,7 +5,7 @@
 			<router-link to="/">Home</router-link>
 			<router-link to="/start-form">Form</router-link>
 			<router-link to="/track">Track Request</router-link>
-			<router-link to="/asb">ASB Portal</router-link>
+			<router-link to="/admin">Admin Portal</router-link>
 			<router-link to="/help">Help</router-link>
 		</div>
 		<div style="height: 64px;"></div>

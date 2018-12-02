@@ -8,9 +8,9 @@ import FormPage from './views/FormPage.vue';
 import ViewFormPage from './views/ViewFormPage.vue';
 import BadBrowserPage from './views/BadBrowserPage.vue';
 import FormSubmittedPage from './views/FormSubmittedPage.vue';
-import LoginPage from './views/asb/LoginPage.vue';
-import AllRequestsPage from './views/asb/AllRequestsPage.vue';
-import PasswordsPage from './views/asb/PasswordsPage.vue';
+import LoginPage from './views/admin-portal/LoginPage.vue';
+import AllRequestsPage from './views/admin-portal/AllRequestsPage.vue';
+import PasswordsPage from './views/admin-portal/PasswordsPage.vue';
 import NotFoundPage from './views/NotFoundPage.vue';
 import HelpPage from './views/HelpPage.vue';
 
@@ -22,6 +22,7 @@ let router = new Router({
 	routes: [
 		{
 			path: '/',
+			redirect: '/start-form',
 			name: 'home',
 			component: HomePage,
 			meta: {
@@ -74,28 +75,28 @@ let router = new Router({
 			component: ViewFormPage
 		},
 		{
-			path: '/asb',
-			redirect: '/asb/login'
+			path: '/admin',
+			redirect: '/admin/login'
 		},
 		{
-			path: '/asb/login',
-			name: 'asb-login',
+			path: '/admin/login',
+			name: 'admin-login',
 			component: LoginPage,
 			meta: {
-				title: 'ASB Login - Activity Requests'
+				title: 'Admin Login - Activity Requests'
 			}
 		},
 		{
-			path: '/asb/all-requests',
-			name: 'asb-all-requests',
+			path: '/admin/all-requests',
+			name: 'admin-all-requests',
 			component: AllRequestsPage,
 			meta: {
 				title: 'All Requests - Activity Requests'
 			}
 		},
 		{
-			path: '/asb/passwords',
-			name: 'asb-passwords',
+			path: '/admin/passwords',
+			name: 'admin-passwords',
 			component: PasswordsPage,
 			meta: {
 				title: 'Passwords - Activity Requests'

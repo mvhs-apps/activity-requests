@@ -3,7 +3,7 @@
         <div>
             <h1 style="display: inline;">All Requests</h1>
             <button class="btn-styled" @click="logout()" style="display: inline; float: right; width: 100px; font-size: 14px; height: 30px;">Logout</button>
-            <button class="btn-styled" @click="$router.push({ path: '/asb/passwords' })" style="display: inline; float: right; width: 140px; font-size: 14px; height: 30px; margin-right: 10px;">Change passwords</button>
+            <button class="btn-styled" @click="$router.push({ path: '/admin/passwords' })" style="display: inline; float: right; width: 140px; font-size: 14px; height: 30px; margin-right: 10px;">Change passwords</button>
         </div>
         <div style="margin: 10px; display: flex; flex-wrap: wrap; justify-content: flex-start;">
             <a @click="refresh()" style="color: green;">Refresh content</a>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { isValidCookie, deleteCookie, getASBPassword, put, get } from '@/utils';
+import { put, get, remove } from '@/utils';
 import { serverHost } from '@/constants';
 import Request from './components/Request.vue';
 
@@ -71,7 +71,7 @@ export default {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ authPassword: getASBPassword() })
+                body: JSON.stringify({ authPassword: get('password') })
             });
             res = await res.json();
             
@@ -81,6 +81,7 @@ export default {
                 if (res.data.hasOwnProperty(form)) {
                     res.data[form].id = form;
                     forms.push(res.data[form]);
+                    put(form, res.data[form]);
                 }
             }
             forms.sort((a, b) => {
@@ -94,7 +95,6 @@ export default {
             this.allForms = forms;
 
             put('all-forms', forms);
-
         },
         async refresh() {
 
@@ -106,18 +106,18 @@ export default {
             this.loadByDateSubmitted();
         },
         logout() {
-            deleteCookie();
-            this.$router.push({ path: '/asb' });
+            remove('password');
+            this.$router.push({ path: '/admin' });
         }
     },
     beforeCreate() {
-        if (!isValidCookie()) {
-            this.$router.push({ path: '/asb/login?continue=%2Fasb%2Fall-requests' });
+        if (!get('password')) {
+            this.$router.push({ path: '/admin/login?continue=%2Fadmin%2Fall-requests' });
         }
     },
     async mounted() {
 
-        if (!isValidCookie())
+        if (!get('password'))
             return;
 
         if (get('all-forms')) {

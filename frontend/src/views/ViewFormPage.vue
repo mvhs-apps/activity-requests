@@ -4,13 +4,18 @@
 			<div v-if="form.loaded === true">
 
 				<span style="font-size: 50px; font-weight: bold;">{{ form.general.activity_name }}</span>
-				<span>Form ID: <input
-					onclick="this.select()"
-					style="display:inline; background: #e8e8e8; padding: 6px 10px; border-radius: 4px; font-size: 14px; border: none; color: black;"
-					disabled
-					size="45"
-					v-bind:value="formId"
-				></span>
+				<span style="display: block;">Form ID: <span
+					style="display: inline-block; background: #e8e8e8; padding: 6px 10px; border-radius: 4px; font-size: 14px; border: none; color: black;"
+				>{{ formId }}</span></span>
+				<span>Submitted on: {{ new Date(form.meta.date_submitted).toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'numeric',
+						day: 'numeric',
+						timeZone: 'America/Los_Angeles',
+						hour12: true,
+						hour: 'numeric',
+						minute: 'numeric',
+				}) }}</span>
 				<br>
 				<div class="div-moved-in-style">
 					<h2>General Information</h2>
@@ -36,37 +41,37 @@
 					<br>
 					<div>
 						<span>Admin approval: </span>
-						<span v-if="form.meta.approved.admin" class="approved">{{ approvedText }}</span>
+						<span v-if="form.meta.approved.admin" class="approved">{{ approvedText('admin') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
 					<div>
 						<span>ASB approval: </span>
-						<span v-if="form.meta.approved.asb" class="approved">{{ approvedText }}</span>
+						<span v-if="form.meta.approved.asb" class="approved">{{ approvedText('asb') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
 					<div v-if="form.campus.cafeteria">
 						<span>Cafeteria approval: </span>
-						<span v-if="form.meta.approved.cafeteria" class="approved">{{ approvedText }}</span>
+						<span v-if="form.meta.approved.cafeteria" class="approved">{{ approvedText('cafeteria') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
 					<div v-if="form.campus.gym">
 						<span>Gym approval: </span>
-						<span v-if="form.meta.approved.gym" class="approved">{{ approvedText }}</span>
+						<span v-if="form.meta.approved.gym" class="approved">{{ approvedText('gym') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
 					<div v-if="form.campus.library">
 						<span>Library approval: </span>
-						<span v-if="form.meta.approved.library" class="approved">{{ approvedText }}</span>
+						<span v-if="form.meta.approved.library" class="approved">{{ approvedText('library') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
 					<div v-if="form.campus.theater">
 						<span>Theater approval: </span>
-						<span v-if="form.meta.approved.theater" class="approved">{{ approvedText }}</span>
+						<span v-if="form.meta.approved.theater" class="approved">{{ approvedText('theater') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
 					<div v-if="form.campus.ccc">
 						<span>College and Career Center approval: </span>
-						<span v-if="form.meta.approved.ccc" class="approved">{{ approvedText }}</span>
+						<span v-if="form.meta.approved.ccc" class="approved">{{ approvedText('ccc') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
 					<br>
@@ -176,14 +181,28 @@ export default {
 		return {
 			formId: this.$route.params.id,
 			isValidForm: true,
-			notApprovedText: 'NO',
-			approvedText: 'YES',
 			badPassword: false,
+			notApprovedText: 'NO',
 			showProcessingApproval: false,
 			approvePassword: '',
 			form: {
 				loaded: false,
 				student_email: ''
+			}
+		}
+	},
+	computed: {
+		approvedText() {
+			return dept => {
+				return 'on ' + (new Date(this.form.meta.approved[dept].time)).toLocaleDateString('en-US', {
+					year: 'numeric',
+					month: 'numeric',
+					day: 'numeric',
+					timeZone: 'America/Los_Angeles',
+					hour12: true,
+					hour: 'numeric',
+					minute: 'numeric',
+				});
 			}
 		}
 	},

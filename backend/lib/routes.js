@@ -21,6 +21,19 @@ function generateId(length) {
 	return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
 }
 
+async function getDeptFromPassword(password) {
+
+	let passwords = (await firebase.database().ref('/settings/passwords').once('value')).val();
+
+	for (let dept in passwords) {
+		if (passwords.hasOwnProperty(dept) && passwords[dept] === password) {
+			return dept;
+		}
+	}
+
+	return false;
+}
+
 async function doesFormExist(id) {
 	return (await firebase.database().ref(`/forms/${id}`).once('value')).exists();
 }
@@ -102,44 +115,34 @@ router.post('/submit-request', async (req, res) => {
 	});
 });
 
-router.post('/update-password', (req, res) => {
+router.post('/update-password', async (req, res) => {
 	let dept = req.body.dept;
 	let authPassword = req.body.authPassword;
 	let newPassword = req.body.newPassword;
 
-	firebase.database().ref('/settings/passwords/asb').once('value').then(snapshot => {
-		if (snapshot.val() === authPassword) {
+	if ((await getDeptFromPassword(authPassword)) === 'admin') {
+		firebase.database().ref(`/settings/passwords/${dept}`).set(newPassword, err => {
+			if (err) return res.json(responses.error('error_writing_data'));
 
-			firebase.database().ref(`/settings/passwords/${dept}`).set(newPassword, err => {
-				if (err) return res.json(responses.error('error_writing_data'));
-				
-				return res.json(responses.success());
-			});
-
-		} else {
-			return res.json(responses.error('bad_password'));
-		}
-	});
+			return res.json(responses.success());
+		});
+	} else
+		res.json(responses.error('bad_password'));
 });
 
 router.post('/approve/:id', async (req, res) => {
 	let id = req.params.id;
 	let password = req.body.password;
 
-	let passwords = (await firebase.database().ref('/settings/passwords').once('value')).val();
+	let dept = await getDeptFromPassword(password);
 
-	for (let dept in passwords) {
-		if (passwords.hasOwnProperty(dept) && passwords[dept] === password) {
+	if (dept && await doesFormExist(id)) {
+		firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).set({
+			approved: true,
+			time: Date.now()
+		});
 
-			if (await doesFormExist(id)) {
-				firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).set({
-					approved: true,
-					time: Date.now()
-				});
-			}
-			
-			return res.json(responses.success());
-		}
+		return res.json(responses.success());
 	}
 
 	res.json(responses.error('bad_password'));
@@ -149,54 +152,43 @@ router.post('/unapprove/:id', async (req, res) => {
 	let id = req.params.id;
 	let password = req.body.password;
 
-	let passwords = (await firebase.database().ref('/settings/passwords').once('value')).val();
+	let dept = await getDeptFromPassword(password);
 
-	for (let dept in passwords) {
-		if (passwords.hasOwnProperty(dept) && passwords[dept] === password) {
+	if (dept && await doesFormExist(id)) {
+		firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).remove();
 
-			if (await doesFormExist(id)) {
-				firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).remove();
-			}
+		return res.json(responses.success());
+	}
 
-			return res.json(responses.success());
-		}
+	res.json(responses.error('bad_password'));
+});
+
+router.post('/get-all-requests', async (req, res) => {
+
+	if (await getDeptFromPassword(req.body.authPassword)) {
+		return res.json(responses.success(
+			(await firebase.database().ref('/forms/').once('value')).val()
+		));
 	}
 
 	res.json(responses.error('bad_password'));
 
 });
 
-router.post('/get-all-requests', (req, res) => {
-	let authPassword = req.body.authPassword;
+router.post('/check-password', async (req, res) => {
+	
+	let dept = await getDeptFromPassword(req.body.password);
 
-	firebase.database().ref('/settings/passwords/asb').once('value').then(snapshot => {
-
-		if (snapshot.val() === authPassword) {
-			firebase.database().ref('/forms/').once('value').then(snapshot => {
-				res.json(responses.success(snapshot.val()));
-			});
-		} else {
-			res.json(responses.error('bad_password'));
-		}
-	});
-
-});
-
-router.post('/check-asb-password', async (req, res) => {
-
-	let password = (await firebase.database().ref('/settings/passwords/asb').once('value')).val();
-
-	if (password === req.body.password) {
-		res.json(responses.success());
-	} else {
-		res.json(responses.error('bad_password'));
+	if (dept) {
+		return res.json(responses.success(dept));
 	}
+
+	res.json(responses.error('bad_password'));
 });
 
 // for heroku, wakes up the server so the user doesn't have to wait later
 router.get('/wake-up', (req, res) => {
 	res.json(responses.success('waking_up'));
 });
-
 
 module.exports = router;

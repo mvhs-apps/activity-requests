@@ -3,15 +3,15 @@
         <h1>Update passwords</h1>
         <p>Current passwords are not displayed here. If you would like to view a current password, contact one of the student developers.</p>
         <span style="display: block; color: green; font-weight: bold; font-size: 22px;" v-show="success"><br>Password changed successfully!</span>
-        <span style="display: block; color: red; font-weight: bold; font-size: 22px;" v-show="badPassword"><br>Your current ASB password is incorrect</span>
+        <span style="display: block; color: red; font-weight: bold; font-size: 22px;" v-show="badPassword"><br>Your current Admin password is incorrect</span>
         <span style="display: block; color: red; font-weight: bold; font-size: 22px;" v-show="serverDown"><br>Server is having issues writing data :( Please report this and try again later.</span>
         <br><br>
-        <input type="password" class="text-input-styled" v-model="currentAsbPassword" placeholder="Current ASB password">
+        <input type="password" class="text-input-styled" v-model="currentAdminPassword" placeholder="Current Admin password">
         <br><br>
         <h4>Select the password to change</h4>
         <select class="select-input" v-model="selectInput">
             <option value="select_one" disabled>Select one</option>
-            <option value="asb-director">ASB Director Password</option>
+            <option value="admin">Admin Password</option>
             <option value="asb">ASB Password</option>
             <option value="library">Library</option>
             <option value="ccc">College and Career Center</option>
@@ -24,20 +24,20 @@
         <input type="password" class="text-input-styled" v-model="newPasswordRetype" placeholder="Retype new password here">
         <br><br>
         <span v-show="newPassword !== newPasswordRetype" style="font-weight: bold; color: red; font-size: 16px;">Passwords don't match<br><br></span>
-        <button v-show="newPassword === newPasswordRetype && selectInput !== 'select_one' && newPassword && currentAsbPassword" class="btn-styled" @click="updatePassword()">Update password</button>
+        <button v-show="newPassword === newPasswordRetype && selectInput !== 'select_one' && newPassword && currentAdminPassword" class="btn-styled" @click="updatePassword()">Update password</button>
     </div>
 </template>
 
 <script>
 import { serverHost } from '@/constants.js';
-import { isValidCookie } from '@/utils';
+import { get } from '@/utils';
 
 export default {
     data() {
         return {
             newPassword: '',
             newPasswordRetype: '',
-            currentAsbPassword: '',
+            currentAdminPassword: '',
             selectInput: 'select_one',
             success: false,
             badPassword: false,
@@ -53,7 +53,7 @@ export default {
                 },
                 body: JSON.stringify({
                     dept: this.selectInput,
-                    authPassword: this.currentAsbPassword,
+                    authPassword: this.currentAdminPassword,
                     newPassword: this.newPassword
                 })
             }).then(res => res.json()).then(res => {
@@ -75,13 +75,13 @@ export default {
 
             this.newPassword = '';
             this.newPasswordRetype = '';
-            this.currentAsbPassword = '';
+            this.currentAdminPassword = '';
             this.selectInput = 'select_one';
         }
     },
     beforeCreate() {
-        if (!isValidCookie()) {
-            this.$router.push({ path: '/asb/login?continue=%2Fasb%2Fpasswords' });
+        if (!get('password')) {
+            this.$router.push({ path: '/admin/login?continue=%2Fadmin%2Fpasswords' });
         }
     }
 }

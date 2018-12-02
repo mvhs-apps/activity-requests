@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Please enter the ASB password</h1>
+        <h1>Please enter any department password</h1>
         <br>
         <input type="password" placeholder="Type here" v-model="password" class="text-input-styled">
         <br>
@@ -13,7 +13,7 @@
 
 <script>
 import {serverHost} from '@/constants';
-import { isValidCookie, createCookie } from '@/utils.js';
+import { put, get } from '@/utils.js';
 
 export default {
     data() {
@@ -24,7 +24,7 @@ export default {
     },
     methods: {
         login() {
-            window.fetch(`${serverHost}/api/check-asb-password`, {
+            window.fetch(`${serverHost}/api/check-password`, {
                 method: 'POST',
                 body: JSON.stringify({ password: this.password }),
                 headers: {
@@ -34,9 +34,9 @@ export default {
                 .then(res => res.json())
                 .then(res => {
                     if (res.success) {
-                        createCookie(this.password);
+                        put('password', this.password);
                         this.$router.push({
-                            path: this.$route.query.continue || '/asb/all-requests'
+                            path: this.$route.query.continue || '/admin/all-requests'
                         });
                     } else {
                         this.badPassword = true;
@@ -45,8 +45,8 @@ export default {
         }
     },
     created() {
-        if (isValidCookie()) {
-            this.$router.push({ path: '/asb/all-requests' });
+        if (get('password')) {
+            this.$router.push({ path: '/admin/all-requests' });
         }
     }
 }
