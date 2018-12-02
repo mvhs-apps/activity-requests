@@ -155,7 +155,7 @@ router.post('/unapprove/:id', async (req, res) => {
 	let dept = await getDeptFromPassword(password);
 
 	if (dept && await doesFormExist(id)) {
-		firebase.database().ref(`/requests/${id}/meta/approved/${dept}`).remove();
+		firebase.database().ref(`/requests/${id}/meta/approved/${dept}`).set(false);
 
 		return res.json(responses.success());
 	}
