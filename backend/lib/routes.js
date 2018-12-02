@@ -35,13 +35,13 @@ async function getDeptFromPassword(password) {
 }
 
 async function doesFormExist(id) {
-	return (await firebase.database().ref(`/forms/${id}`).once('value')).exists();
+	return (await firebase.database().ref(`/requests/${id}`).once('value')).exists();
 }
 
 router.get('/get-request/:id', (req, res) => {
 	const id = req.params.id;
 
-	firebase.database().ref(`/forms/${id}`).once('value').then(snapshot => {
+	firebase.database().ref(`/requests/${id}`).once('value').then(snapshot => {
 		if (snapshot.exists()) {
 			res.json(responses.success(snapshot.val()));
 		} else {
@@ -65,7 +65,7 @@ router.post('/submit-request', async (req, res) => {
 	form.meta = {
 		date_submitted: Date.now(),
 		approved: {
-			asb: false
+			admin: false
 		}
 	}
 
@@ -83,7 +83,7 @@ router.post('/submit-request', async (req, res) => {
 		return res.json(responses.error('bad_recaptcha'));
 	}
 
-	firebase.database().ref(`/forms/${id}`).set(form, async err => {
+	firebase.database().ref(`/requests/${id}`).set(form, async err => {
 		if (err) {
 			res.json(responses.error('error_writing_data'));
 		} else {
@@ -137,7 +137,7 @@ router.post('/approve/:id', async (req, res) => {
 	let dept = await getDeptFromPassword(password);
 
 	if (dept && await doesFormExist(id)) {
-		firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).set({
+		firebase.database().ref(`/requests/${id}/meta/approved/${dept}`).set({
 			approved: true,
 			time: Date.now()
 		});
@@ -155,7 +155,7 @@ router.post('/unapprove/:id', async (req, res) => {
 	let dept = await getDeptFromPassword(password);
 
 	if (dept && await doesFormExist(id)) {
-		firebase.database().ref(`/forms/${id}/meta/approved/${dept}`).remove();
+		firebase.database().ref(`/requests/${id}/meta/approved/${dept}`).remove();
 
 		return res.json(responses.success());
 	}
@@ -167,7 +167,7 @@ router.post('/get-all-requests', async (req, res) => {
 
 	if (await getDeptFromPassword(req.body.authPassword)) {
 		return res.json(responses.success(
-			(await firebase.database().ref('/forms/').once('value')).val()
+			(await firebase.database().ref('/requests/').once('value')).val()
 		));
 	}
 

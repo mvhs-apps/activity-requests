@@ -49,7 +49,7 @@
 						<span v-if="form.meta.approved.asb" class="approved">{{ approvedText('asb') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
-					<div v-if="form.campus.cafeteria">
+					<div v-if="form.campus.cafeteria || form.campus.includes_food">
 						<span>Cafeteria approval: </span>
 						<span v-if="form.meta.approved.cafeteria" class="approved">{{ approvedText('cafeteria') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>

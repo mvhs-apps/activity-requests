@@ -85,7 +85,7 @@
 				</div>
 				<div class="input-area">
 					<div class="select-input">
-						<span class="input-title">Is your event a fundraiser or a donation drive?</span>
+						<span class="input-title">Is your event a fundraiser or donation drive?</span>
 						<select v-model="form.general.is_fundraiser">
 							<option value="select_one" disabled>Select one</option>
 							<option value="yes">Yes</option>
@@ -206,7 +206,7 @@
 						<div class="input-area checkbox-extension" v-show="form.campus.tables">
 							<div class="text-input">
 								<span class="input-title" style="margin-bottom: 0;">Quantity of tables/chairs</span>
-								<span class="input-subtitle">Enter a number between 1 and 25</span>
+								<span class="input-subtitle">Enter a number between 1 and 100</span>
 								<input type="number" min="1" max="25" v-model="form.campus['tables-extra-info']"
 											 placeholder="Number here">
 								<span class="feedback" v-show="form.campus['tables-extra-info'] < 1 || form.campus['tables-extra-info'] > 100">
