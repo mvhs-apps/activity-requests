@@ -44,10 +44,10 @@ export default {
             this.formsToDisplay = this.getSortedForms();
         },
         loadOnlyApproved() {
-            this.formsToDisplay = this.getSortedForms().filter(form => form.meta.approved.asb);
+            this.formsToDisplay = this.getSortedForms().filter(form => form.meta.approved.admin);
         },
         loadOnlyUnapproved() {
-            this.formsToDisplay = this.getSortedForms().filter(form => !form.meta.approved.asb);
+            this.formsToDisplay = this.getSortedForms().filter(form => !form.meta.approved.admin);
         },
         sortByClubName() {
             this.formsToDisplay = this.getSortedForms().sort((a, b) => {
