@@ -38,6 +38,23 @@ async function doesFormExist(id) {
 	return (await firebase.database().ref(`/requests/${id}`).once('value')).exists();
 }
 
+async function getForm(id) {
+	let snapshot = await firebase.database().ref(`/requests/${id}`).once('value');
+	return snapshot.val();
+}
+
+function sendRequestChangedEmails(id, form) {
+	return mailer({
+		to: form.general.student_email,
+		cc: form.general.advisor_email,
+		subject: 'Activity Request Changed',
+		html: emails.requestChanged({
+			id,
+			studentName: form.general.student_name
+		})
+	});
+}
+
 router.get('/get-request/:id', (req, res) => {
 	const id = req.params.id;
 
@@ -133,6 +150,11 @@ router.post('/update-password', async (req, res) => {
 router.post('/approve/:id', async (req, res) => {
 	let id = req.params.id;
 	let password = req.body.password;
+	let form = await getForm(id);
+
+	if (!form) {
+		return res.json(responses.error('bad_form'));
+	}
 
 	let dept = await getDeptFromPassword(password);
 
@@ -141,6 +163,8 @@ router.post('/approve/:id', async (req, res) => {
 			approved: true,
 			time: Date.now()
 		});
+
+		await sendRequestChangedEmails(id, form);
 
 		return res.json(responses.success());
 	}
@@ -151,11 +175,18 @@ router.post('/approve/:id', async (req, res) => {
 router.post('/unapprove/:id', async (req, res) => {
 	let id = req.params.id;
 	let password = req.body.password;
+	let form = await getForm(id);
+
+	if (!form) {
+		return res.json(responses.error('bad_form'));
+	}
 
 	let dept = await getDeptFromPassword(password);
 
 	if (dept && await doesFormExist(id)) {
 		firebase.database().ref(`/requests/${id}/meta/approved/${dept}`).set(false);
+
+		await sendRequestChangedEmails(id, form);
 
 		return res.json(responses.success());
 	}

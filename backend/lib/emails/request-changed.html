@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Avenir', sans-serif;
+            color: black;
+        }
+
+        .main-div {
+            padding: 30px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            max-width: 1000px;
+            background: #fff;
+            width: 85%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="background: #fccb0b; padding: 20px;">
+        <span style="font-size: 28px; font-weight: bold;">Mountain View Activity Requests</span>
+    </div>
+    <div class="main-div">
+        <div>
+            <p style="font-size: 18px; font-weight: bold;">Hey {{ studentName }},</p>
+            <br>
+            <p>
+                A change was made to your activity request for Mountain View High School ASB: a party/department either
+                approved or unapproved your activity.
+            </p>
+            <br>
+            <p>To view the changes and track your form, <a href="https://activity.mvhs.io/form/{{ id }}">click here</a>
+                or paste this link into your browser: <a href="https://activity.mvhs.io/form/{{ id }}">https://activity.mvhs.io/form/{{
+                    id }}</a></p>
+            <br>
+            <p>Thanks!</p>
+            <p>The Mountain View Activity Requests Team</p>
+        </div>
+    </div>
+</body>
+
+</html>
