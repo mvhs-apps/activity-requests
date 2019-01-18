@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 
 module.exports = data => {
 
-	let { to, subject, html } = data;
+	let { to, subject, html, cc } = data;
 
 	if (!(to && subject)) {
 		throw 'missing_params';
@@ -20,6 +20,7 @@ module.exports = data => {
 	return transporter.sendMail({
 		from: `"MVHS Activity Requests" ${process.env.GMAIL_USERNAME}`,
 		to,
+		cc,
 		subject,
 		html
 	});
