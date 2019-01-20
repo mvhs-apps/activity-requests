@@ -104,6 +104,16 @@
 						<input type="checkbox" v-model="form.campus.gym" id="gym-checkbox">
 						<label for="gym-checkbox">Gym/fields</label>
 					</div>
+					<div class="input-area checkbox-extension" v-show="form.campus.gym">
+						<div class="text-input">
+							<span class="input-title">Please indicate which gym you want and how you will use it</span>
+							<div>
+								<p class="hoverable"><i class="material-icons">help</i></p>
+								<div>Be specific, if possible</div>
+							</div>
+							<textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.campus['gym-extra-info']" placeholder="Write here"></textarea>
+						</div>
+					</div>
 					<div class="md-checkbox">
 						<input type="checkbox" v-model="form.campus.ccc" id="ccc-checkbox">
 						<label for="ccc-checkbox">College and Career Center</label>
@@ -190,13 +200,9 @@
 						</div>
 						<div class="input-area checkbox-extension" v-show="form.campus.screens">
 							<div class="text-input">
-								<span class="input-title" style="margin-bottom: 0;">Quantity of projector(s)/screen(s)</span>
-								<span class="input-subtitle">Enter a number between 1 and 2</span>
-								<input type="number" min="1" max="2" v-model="form.campus['screens-extra-info']"
-											 placeholder="Number here">
-								<span class="feedback" v-show="form.campus['screens-extra-info'] < 1 || form.campus['screens-extra-info'] > 2">
-									Please enter a number between 1 and 2
-								</span>
+								<span class="input-title" style="margin-bottom: 0;">Please indicate the quantity of projector(s)/screen(s) you need and how you will use them</span>
+								<span class="input-subtitle">No more than 2 projectors or screens</span>
+								<textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.campus['screens-extra-info']" placeholder="Be specific, if possible"></textarea>
 							</div>
 						</div>
 						<div class="md-checkbox">
@@ -205,13 +211,9 @@
 						</div>
 						<div class="input-area checkbox-extension" v-show="form.campus.tables">
 							<div class="text-input">
-								<span class="input-title" style="margin-bottom: 0;">Quantity of tables/chairs</span>
-								<span class="input-subtitle">Enter a number between 1 and 100</span>
-								<input type="number" min="1" max="25" v-model="form.campus['tables-extra-info']"
-											 placeholder="Number here">
-								<span class="feedback" v-show="form.campus['tables-extra-info'] < 1 || form.campus['tables-extra-info'] > 100">
-									Please enter a number between 1 and 100
-								</span>
+								<span class="input-title" style="margin-bottom: 0;">Please indicate the quantity of tables/chairs you need and how you will use them</span>
+								<span class="input-subtitle">No more than 100 chairs and 15 tables</span>
+								<textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.campus['tables-extra-info']" placeholder="Be specific, if possible"></textarea>											 
 							</div>
 						</div>
 						<div class="md-checkbox">
@@ -508,7 +510,7 @@ export default {
 			// validation
 			let f = this.form.general;
 			if (!f.student_name || !f.activity_name || !f.club_name || !f.student_email || !f.advisor_email || !f.event_description || !f.start_date || !f.all_dates) {
-				this.validationHTML = 'You didn\'t complete some fields in the \'General Information\' category';
+				this.validationHTML = 'You must complete all fields in the \'General Information\' category';
 				return this.scrollUp();
 			}
 

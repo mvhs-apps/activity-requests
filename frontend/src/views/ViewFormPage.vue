@@ -142,7 +142,12 @@
 						<div v-if="form.campus['classroom-extra-info']" class="div-moved-in" style="margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
 							<span>{{ form.campus['classroom-extra-info'] }}</span>
 						</div>
-						<span v-if="form.campus.gym">Wants the gym</span>
+						<div v-if="form.campus.gym">
+							<span>Wants the gym (student's comments below)</span>
+							<div class="div-indented">
+								"{{ form.campus['gym-extra-info'] }}"
+							</div>
+						</div>
 						<span v-if="form.campus.library">Wants the library</span>
 						<span v-if="form.campus.theater">Wants the theater</span>
 						<span v-if="form.campus.ccc">Wants the College and Career Center</span>
@@ -150,8 +155,18 @@
 					<div class="div-moved-in">
 						<h3>Desired equipment</h3>
 						<span v-if="form.campus.cashboxes">Wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
-						<span v-if="form.campus.screens">Wants {{ form.campus['screens-extra-info'] }} screens/projectors</span>
-						<span v-if="form.campus.tables">Wants {{ form.campus['tables-extra-info'] }} tables</span>
+						<div v-if="form.campus.screens">
+							<span>Wants screens/projectors (student's comments below)</span>
+							<div class="div-indented">
+								"{{ form.campus['screens-extra-info'] }}"
+							</div>
+						</div>
+						<div v-if="form.campus.tables">
+							<span>Wants tables/chairs (student's comments below)</span>
+							<div class="div-indented">
+								"{{ form.campus['tables-extra-info'] }}"
+							</div>
+						</div>
 						<span v-if="form.campus.speakers">Wants speakers</span>
 					</div>
 					<div class="div-moved-in" v-if="form.campus.includes_food">
@@ -303,6 +318,11 @@ export default {
 		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 		border-left: 6px solid #fccb0b;
 		transition: box-shadow .2s ease;
+	}
+
+	.div-indented {
+		margin-left: 10px;
+		border: 1px solid #ccc;
 	}
 
 	span {
