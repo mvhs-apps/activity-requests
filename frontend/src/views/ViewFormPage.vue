@@ -23,7 +23,10 @@
 					<span>Student email: {{ form.general.student_email }}</span>
 					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
 					<span>Club name: {{ form.general.club_name }}</span>
-					<span>Description: {{ form.general.event_description }}</span>
+					<span>Description:</span>
+					<div class="student-comments">
+						{{ form.general.event_description }}
+					</div>
 					<span>Start Date: {{ new Date(form.general.start_date).toLocaleDateString('en-US', {
 							weekday: 'short',
 							year: 'numeric',
@@ -39,16 +42,6 @@
 					<h2>Activity Approval Progress</h2>
 					<span>This acitvity <span style="display: inline; font-weight: bold;">cannot</span> occur without the approval of all of the following:</span>
 					<br>
-					<div>
-						<span>Admin approval: </span>
-						<span v-if="form.meta.approved.admin" class="approved">{{ approvedText('admin') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
-					</div>
-					<div>
-						<span>ASB approval: </span>
-						<span v-if="form.meta.approved.asb" class="approved">{{ approvedText('asb') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
-					</div>
 					<div v-if="form.campus.cafeteria || form.campus.includes_food">
 						<span>Cafeteria approval: </span>
 						<span v-if="form.meta.approved.cafeteria" class="approved">{{ approvedText('cafeteria') }}</span>
@@ -74,13 +67,25 @@
 						<span v-if="form.meta.approved.ccc" class="approved">{{ approvedText('ccc') }}</span>
 						<span v-else class="not-approved">{{ notApprovedText }}</span>
 					</div>
+					<div>
+						<span>ASB approval: </span>
+						<span v-if="form.meta.approved.asb" class="approved">{{ approvedText('asb') }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
+					<div>
+						<span>Admin approval: </span>
+						<span v-if="form.meta.approved.admin" class="approved">{{ approvedText('admin') }}</span>
+						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					</div>
 					<br>
 					<div class="div-moved-in">
 						<h3>Approve this request</h3>
 						<br>
 						<div v-show="!showProcessingApproval">
+							<input type="text" v-model="approveName" placeholder="Your full name" class="text-input-styled" style="margin-right: 10px;">
 							<input type="password" v-model="approvePassword" placeholder="Department password" class="text-input-styled">
-							<button @click="approve()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Approve</button>
+							<br><br>
+							<button @click="approve()" class="btn-styled" style="font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Approve</button>
 							<button @click="unapprove()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Unapprove</button>
 							<br>
 							<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
@@ -144,7 +149,7 @@
 						</div>
 						<div v-if="form.campus.gym">
 							<span>Wants the gym (student's comments below)</span>
-							<div class="div-indented">
+							<div class="student-comments">
 								"{{ form.campus['gym-extra-info'] }}"
 							</div>
 						</div>
@@ -157,21 +162,24 @@
 						<span v-if="form.campus.cashboxes">Wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
 						<div v-if="form.campus.screens">
 							<span>Wants screens/projectors (student's comments below)</span>
-							<div class="div-indented">
-								"{{ form.campus['screens-extra-info'] }}"
+							<div class="student-comments">
+								{{ form.campus['screens-extra-info'] }}
 							</div>
 						</div>
 						<div v-if="form.campus.tables">
 							<span>Wants tables/chairs (student's comments below)</span>
-							<div class="div-indented">
-								"{{ form.campus['tables-extra-info'] }}"
+							<div class="student-comments">
+								{{ form.campus['tables-extra-info'] }}
 							</div>
 						</div>
 						<span v-if="form.campus.speakers">Wants speakers</span>
 					</div>
 					<div class="div-moved-in" v-if="form.campus.includes_food">
 						<h3>Food Involved</h3>
-						<span>{{ form.campus.includes_food_extra_info }}</span>
+						<span>Student's comments below</span>
+						<div class="student-comments">
+							{{ form.campus.includes_food_extra_info }}
+						</div>
 					</div>
 				</div>
 
@@ -200,6 +208,7 @@ export default {
 			notApprovedText: 'NO',
 			showProcessingApproval: false,
 			approvePassword: '',
+			approveName: '',
 			form: {
 				loaded: false,
 				student_email: ''
@@ -209,6 +218,8 @@ export default {
 	computed: {
 		approvedText() {
 			return dept => {
+				let whoText = this.form.meta.approved[dept].who ? ' by ' + this.form.meta.approved[dept].who : '';
+
 				return 'on ' + (new Date(this.form.meta.approved[dept].time)).toLocaleDateString('en-US', {
 					year: 'numeric',
 					month: 'numeric',
@@ -217,7 +228,7 @@ export default {
 					hour12: true,
 					hour: 'numeric',
 					minute: 'numeric',
-				});
+				}) + whoText;
 			}
 		}
 	},
@@ -252,12 +263,18 @@ export default {
 		},
 		async approve() {
 			let password = this.approvePassword;
+			let who = this.approveName;
+
+			if (!password || !who)
+				return;
+
 			this.approvePassword = '';
+			this.approveName = '';
 			this.showProcessingApproval = true;
 
 			let res = await window.fetch(`${serverHost}/api/approve/${this.formId}`, {
 				method: 'POST',
-				body: JSON.stringify({ password }),
+				body: JSON.stringify({ password, who }),
 				headers: {
 					'Content-Type': 'application/json'
 				}
@@ -269,10 +286,13 @@ export default {
 			remove('all-forms');
 			remove(this.formId);
 			this.loadData();
-			
 		},
 		async unapprove() {
 			let password = this.approvePassword;
+
+			if (!password)
+				return;
+
 			this.approvePassword = '';
 			this.showProcessingApproval = true;
 
@@ -290,7 +310,6 @@ export default {
 			remove('all-forms');
 			remove(this.formId);
 			this.loadData();
-			
 		}
 	},
 	created() {
@@ -302,58 +321,62 @@ export default {
 <style scoped src="@/assets/text-input-styled.css"></style>
 <style scoped src="@/assets/btn-styled.css"></style>
 <style scoped>
-	.div-moved-in {
-		margin-top: 10px;
-		padding: 10px;
-		background: #eaeaea;
-		border-radius: 6px;
-	}
 
-	.div-moved-in-style {
-		max-width: 750px;
-		margin-top: 10px;
-		margin-left: 16px;
-		padding: 18px;
-		border-radius: 8px;
-		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-		border-left: 6px solid #fccb0b;
-		transition: box-shadow .2s ease;
-	}
+.div-moved-in {
+	margin-top: 10px;
+	padding: 10px;
+	background: #eaeaea;
+	border-radius: 6px;
+}
 
-	.div-indented {
-		margin-left: 10px;
-		border: 1px solid #ccc;
-	}
+.div-moved-in-style {
+	max-width: 750px;
+	margin-top: 10px;
+	margin-left: 16px;
+	padding: 18px;
+	border-radius: 8px;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+	border-left: 6px solid #fccb0b;
+	transition: box-shadow .2s ease;
+}
 
-	span {
-		display: block;
-	}
+.student-comments {
+	margin-left: 14px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 4px 8px;
+	background: #fff;
+}
 
-	h2 {
-		font-size: 28px;
-		display: inline-block;
-		padding-bottom: 0;
-		margin-bottom: 6px;
-		font-weight: bold;
-	}
+span {
+	display: block;
+}
 
-	h3 {
-		font-size: 20px;
-		font-weight: bold;
-	}
+h2 {
+	font-size: 28px;
+	display: inline-block;
+	padding-bottom: 0;
+	margin-bottom: 6px;
+	font-weight: bold;
+}
 
-	#approved-area > div > span {
-		display: inline;
-	}
+h3 {
+	font-size: 20px;
+	font-weight: bold;
+}
 
-	.approved {
-		color: green;
-		font-weight: bold;
-	}
+#approved-area > div > span {
+	display: inline;
+}
 
-	.not-approved {
-		color: red;
-		font-weight: bold;
-	}
+.approved {
+	color: green;
+	font-weight: bold;
+}
+
+.not-approved {
+	color: red;
+	font-weight: bold;
+}
 
 </style>

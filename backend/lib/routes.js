@@ -150,6 +150,7 @@ router.post('/update-password', async (req, res) => {
 router.post('/approve/:id', async (req, res) => {
 	let id = req.params.id;
 	let password = req.body.password;
+	let who = req.params.who;
 	let form = await getForm(id);
 
 	if (!form) {
@@ -161,7 +162,8 @@ router.post('/approve/:id', async (req, res) => {
 	if (dept && await doesFormExist(id)) {
 		firebase.database().ref(`/requests/${id}/meta/approved/${dept}`).set({
 			approved: true,
-			time: Date.now()
+			time: Date.now(),
+			who
 		});
 
 		await sendRequestChangedEmails(id, form);
