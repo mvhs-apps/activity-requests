@@ -150,7 +150,8 @@ router.post('/update-password', async (req, res) => {
 router.post('/approve/:id', async (req, res) => {
 	let id = req.params.id;
 	let password = req.body.password;
-	let who = req.params.who;
+	let who = req.body.who;
+	console.log(who);
 	let form = await getForm(id);
 
 	if (!form) {

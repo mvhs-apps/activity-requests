@@ -150,7 +150,7 @@
 						<div v-if="form.campus.gym">
 							<span>Wants the gym (student's comments below)</span>
 							<div class="student-comments">
-								"{{ form.campus['gym-extra-info'] }}"
+								{{ form.campus['gym-extra-info'] }}
 							</div>
 						</div>
 						<span v-if="form.campus.library">Wants the library</span>
