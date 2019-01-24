@@ -1,246 +1,237 @@
 <template>
 	<div>
-		<div v-if="isValidForm">
-			<div v-if="form.loaded === true">
+		<div v-if="isValidForm && form.loaded">
 
-				<span style="font-size: 50px; font-weight: bold;">{{ form.general.activity_name }}</span>
-				<span style="display: block;">Form ID: <span
-					style="display: inline-block; background: #e8e8e8; padding: 6px 10px; border-radius: 4px; font-size: 14px; border: none; color: black;"
-				>{{ formId }}</span></span>
-				<span>Submitted on: {{ new Date(form.meta.date_submitted).toLocaleDateString('en-US', {
+			<span style="font-size: 50px; font-weight: bold;">{{ form.general.activity_name }}</span>
+			<span style="display: block;">Form ID: <span
+				style="display: inline-block; background: #e8e8e8; padding: 6px 10px; border-radius: 4px; font-size: 14px; border: none; color: black;"
+			>{{ formId }}</span></span>
+			<span>Submitted on: {{ new Date(form.meta.date_submitted).toLocaleDateString('en-US', {
+					year: 'numeric',
+					month: 'numeric',
+					day: 'numeric',
+					timeZone: 'America/Los_Angeles',
+					hour12: true,
+					hour: 'numeric',
+					minute: 'numeric',
+			}) }}</span>
+			<br>
+			<div class="div-moved-in-style">
+				<h2>General Information</h2>
+				<span>Student requester: {{ form.general.student_name }}</span>
+				<span>Student email: {{ form.general.student_email }}</span>
+				<span>Adult advisor email: {{ form.general.advisor_email }}</span>
+				<span>Organization name: {{ form.general.organization_name }}</span>
+				<span>Description:</span>
+				<div class="student-comment">
+					{{ form.general.event_description }}
+				</div>
+				<span>Start Date: {{ new Date(form.general.start_date).toLocaleDateString('en-US', {
+						weekday: 'short',
 						year: 'numeric',
-						month: 'numeric',
+						month: 'short',
 						day: 'numeric',
 						timeZone: 'America/Los_Angeles',
-						hour12: true,
-						hour: 'numeric',
-						minute: 'numeric',
-				}) }}</span>
+					}) }}
+				</span>
+				<span>Other Dates &amp; Times:</span>
+				<div class="student-comment">
+					{{ form.general.all_dates }}
+				</div>
+			</div>
+			<br>
+			<div id="approved-area" class="div-moved-in-style">
+				<h2>Activity Approval Progress</h2>
+				<span>This acitvity <span style="display: inline; font-weight: bold;">cannot</span> occur without the approval of all of the following:</span>
 				<br>
-				<div class="div-moved-in-style">
-					<h2>General Information</h2>
-					<span>Student requester: {{ form.general.student_name }}</span>
-					<span>Student email: {{ form.general.student_email }}</span>
-					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
-					<span>Organization name: {{ form.general.organization_name }}</span>
-					<span>Description:</span>
-					<div class="student-comments">
-						{{ form.general.event_description }}
-					</div>
-					<span>Start Date: {{ new Date(form.general.start_date).toLocaleDateString('en-US', {
-							weekday: 'short',
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric',
-							timeZone: 'America/Los_Angeles',
-						}) }}
-					</span>
-					<span>Other Dates &amp; Times:</span>
-					<div class="student-comments">
-						{{ form.general.all_dates }}
-					</div>
+				<div v-if="form.campus.cafeteria || form.campus.includes_food">
+					<span>Cafeteria approval: </span>
+					<span v-if="form.meta.approved.cafeteria" class="approved">{{ approvedText('cafeteria') }}</span>
+					<span v-else class="not-approved">{{ notApprovedText }}</span>
+				</div>
+				<div v-if="form.campus.gym">
+					<span>Gym approval: </span>
+					<span v-if="form.meta.approved.gym" class="approved">{{ approvedText('gym') }}</span>
+					<span v-else class="not-approved">{{ notApprovedText }}</span>
+				</div>
+				<div v-if="form.campus.library">
+					<span>Library approval: </span>
+					<span v-if="form.meta.approved.library" class="approved">{{ approvedText('library') }}</span>
+					<span v-else class="not-approved">{{ notApprovedText }}</span>
+				</div>
+				<div v-if="form.campus.theater">
+					<span>Theater approval: </span>
+					<span v-if="form.meta.approved.theater" class="approved">{{ approvedText('theater') }}</span>
+					<span v-else class="not-approved">{{ notApprovedText }}</span>
+				</div>
+				<div v-if="form.campus.ccc">
+					<span>College and Career Center approval: </span>
+					<span v-if="form.meta.approved.ccc" class="approved">{{ approvedText('ccc') }}</span>
+					<span v-else class="not-approved">{{ notApprovedText }}</span>
+				</div>
+				<div>
+					<span>ASB approval: </span>
+					<span v-if="form.meta.approved.asb" class="approved">{{ approvedText('asb') }}</span>
+					<span v-else class="not-approved">{{ notApprovedText }}</span>
+				</div>
+				<div>
+					<span>Admin approval: </span>
+					<span v-if="form.meta.approved.admin" class="approved">{{ approvedText('admin') }}</span>
+					<span v-else class="not-approved">{{ notApprovedText }}</span>
 				</div>
 				<br>
-				<div id="approved-area" class="div-moved-in-style">
-					<h2>Activity Approval Progress</h2>
-					<span>This acitvity <span style="display: inline; font-weight: bold;">cannot</span> occur without the approval of all of the following:</span>
+				<div class="div-moved-in">
+					<h3>Approve this request</h3>
 					<br>
-					<div v-if="form.campus.cafeteria || form.campus.includes_food">
-						<span>Cafeteria approval: </span>
-						<span v-if="form.meta.approved.cafeteria" class="approved">{{ approvedText('cafeteria') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					<div v-show="!showProcessingApproval">
+						<input type="text" v-model="approveName" placeholder="Your full name" class="text-input-styled" style="margin-right: 10px;">
+						<input type="password" v-model="approvePassword" placeholder="Department password" class="text-input-styled">
+						<br><br>
+						<button @click="approve()" class="btn-styled" style="font-size: 14px; width: 100px; height: 50px; display: inline;">Approve</button>
+						<button @click="unapprove()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline;">Unapprove</button>
+						<br>
+						<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
+					</div>
+					<span v-show="showProcessingApproval">Please wait</span>
+				</div>
+			</div>
+			<br>
+			<div v-if="form.general.is_fundraiser === 'yes'" class="div-moved-in-style">
+				<h2>Fundraiser Details</h2>
+				<span>This activity is a fundraiser</span>
+
+				<!-- the different types of fundraisers -->
+				<div v-if="form.fundraiser.fundraiser_type === 'restaurant'" class="div-moved-in">
+					<h3>Restaurant Fundraiser</h3>
+					<span>Restaurant name: {{ form.fundraiser['restaurant-name'] }}</span>
+					<span>Restaurant address: {{ form.fundraiser['restaurant-address'] }}</span>
+				</div>
+				<div v-if="form.fundraiser.fundraiser_type === 'donation_drive'" class="div-moved-in">
+					<h3>Donation Drive Fundraiser</h3>
+					<span>Items to be collected: {{ form.fundraiser['donation_drive-items-to-be-collected'] }}</span>
+					<span>Organization recieving the items: {{ form.fundraiser['donation_drive-receiving-organization-information'] }}</span>
+					<span>How will items reach organization: {{ form.fundraiser['donation_drive-receiving-organization-delivery-plan'] }}</span>
+				</div>
+				<div v-if="form.fundraiser.fundraiser_type === 'food_sales'" class="div-moved-in">
+					<h3>Food Sales Fundraiser</h3>
+					<span>Product description: {{ form.fundraiser['food_sales-product-description'] }}</span>
+					<span>Product expected selling price: ${{ form.fundraiser['food_sales-expected-selling-price'] }}</span>
+					<span>Expected # of items sold: {{ form.fundraiser['food_sales-expected-items-sold'] }}</span>
+					<span>Expected income: ${{ form.fundraiser['food_sales-expected-income'] }}</span>
+					<span>Expected costs: ${{ form.fundraiser['food_sales-expected-costs'] }}</span>
+				</div>
+				<div v-if="form.fundraiser.fundraiser_type === 'product'" class="div-moved-in">
+					<h3>Non-Food Product Sales Fundraiser</h3>
+					<span>Product description: {{ form.fundraiser['product-product-description'] }}</span>
+					<span>Product expected selling price: ${{ form.fundraiser['product-expected-selling-price'] }}</span>
+					<span>Expected # of items sold: {{ form.fundraiser['product-expected-items-sold'] }}</span>
+					<span>Expected income: ${{ form.fundraiser['product-expected-income'] }}</span>
+					<span>Expected costs: ${{ form.fundraiser['product-expected-costs'] }}</span>
+				</div>
+				<div v-if="form.fundraiser.fundraiser_type === 'third_party_fundraiser'" class="div-moved-in">
+					<h3>Third-party/online Fundraiser</h3>
+					<span>Link to online fundraising page: {{ form.fundraiser['third_party_fundraiser-link'] }}</span>
+					<span>Agreed/signed with the following name: {{ form.fundraiser['third_party_fundraiser-e-signature'] }}</span>
+				</div>
+
+			</div>
+			<br>
+
+			<div v-if="form.general.event_on_campus === 'yes'" class="div-moved-in-style">
+				<h2>Campus Details</h2>
+				<span>This activity will occur on campus</span>
+				<span v-if="form.campus.setup_image">Setup Image: <a :href="form.campus.setup_image" target="_blank">{{ form.campus.setup_image }}</a></span>
+				<div class="div-moved-in">
+					<h3>Location information</h3>
+					<span>Location on campus: {{ form.campus.location_on_campus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}</span>
+					<br>
+					<span v-if="form.campus.cafeteria">Wants the cafeteria</span>
+					<div v-if="form.campus.classroom">
+						<span>Wants classrooms(s) [student's comments below]</span>
+						<div class="student-comment">
+							{{ form.campus['classroom-extra-info'] }}
+						</div>
 					</div>
 					<div v-if="form.campus.gym">
-						<span>Gym approval: </span>
-						<span v-if="form.meta.approved.gym" class="approved">{{ approvedText('gym') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
+						<span>Wants the gym (student's comments below)</span>
+						<div class="student-comment">
+							{{ form.campus['gym-extra-info'] }}
+						</div>
 					</div>
-					<div v-if="form.campus.library">
-						<span>Library approval: </span>
-						<span v-if="form.meta.approved.library" class="approved">{{ approvedText('library') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					<span v-if="form.campus.library">Wants the library</span>
+					<span v-if="form.campus.theater">Wants the theater</span>
+					<span v-if="form.campus.ccc">Wants the College and Career Center</span>
+				</div>
+				<div class="div-moved-in">
+					<h3>Desired equipment</h3>
+					<span v-if="form.campus.cashboxes">Wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
+					<div v-if="form.campus.screens">
+						<span>Wants screens/projectors (student's comments below)</span>
+						<div class="student-comment">
+							{{ form.campus['screens-extra-info'] }}
+						</div>
 					</div>
-					<div v-if="form.campus.theater">
-						<span>Theater approval: </span>
-						<span v-if="form.meta.approved.theater" class="approved">{{ approvedText('theater') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					<div v-if="form.campus.tables">
+						<span>Wants tables/chairs (student's comments below)</span>
+						<div class="student-comment">
+							{{ form.campus['tables-extra-info'] }}
+						</div>
 					</div>
-					<div v-if="form.campus.ccc">
-						<span>College and Career Center approval: </span>
-						<span v-if="form.meta.approved.ccc" class="approved">{{ approvedText('ccc') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
+					<span v-if="form.campus.speakers">Wants speakers</span>
+				</div>
+				<div class="div-moved-in" v-if="form.campus.includes_food">
+					<h3>Food Involved</h3>
+					<span>Student's comments below</span>
+					<div class="student-comment">
+						{{ form.campus.includes_food_extra_info }}
 					</div>
+				</div>
+			</div>
+			<br>
+			<div class="div-moved-in-style">
+				<h2>Comments</h2>
+				<div v-show="form.meta.comments" style="border: 1px solid #ccc; border-radius: 6px;">
+					<Comment
+						v-for="comment of form.meta.comments"
+						v-bind:key="comment.time"
+						v-bind:comment="comment"
+					/>
+				</div>
+				<div v-show="!form.meta.comments">
+					There are no comments
+				</div>
+				<br>
+				<br>
+				<div>
+					<h3>Add a new comment</h3>
+					<input type="text" v-model="commentName" placeholder="Your full name" class="text-input-styled">
+					<br><br>
+					<textarea v-model="commentBody" class="text-input-styled" placeholder="Type your comment here..." style="width: 80%; border: 1px solid #ccc; font-size: 16px; outline: none; box-shadow: none; border-radius: 8px; padding: 14px; height: 100px;"></textarea>
+					<br><br>
 					<div>
-						<span>ASB approval: </span>
-						<span v-if="form.meta.approved.asb" class="approved">{{ approvedText('asb') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
-					</div>
-					<div>
-						<span>Admin approval: </span>
-						<span v-if="form.meta.approved.admin" class="approved">{{ approvedText('admin') }}</span>
-						<span v-else class="not-approved">{{ notApprovedText }}</span>
+						<input type="checkbox" v-model="shouldSendEmail" id="shouldSendEmail">
+						<label for="shouldSendEmail" style="margin-left: 10px;">Notify (by email) the requesters that someone has commented on their activity request</label>
 					</div>
 					<br>
-					<div class="div-moved-in">
-						<h3>Approve this request</h3>
-						<br>
-						<div v-show="!showProcessingApproval">
-							<input type="text" v-model="approveName" placeholder="Your full name" class="text-input-styled" style="margin-right: 10px;">
-							<input type="password" v-model="approvePassword" placeholder="Department password" class="text-input-styled">
-							<br><br>
-							<button @click="approve()" class="btn-styled" style="font-size: 14px; width: 100px; height: 50px; display: inline;">Approve</button>
-							<button @click="unapprove()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline;">Unapprove</button>
-							<br>
-							<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
-						</div>
-						<span v-show="showProcessingApproval">Please wait</span>
+					<button v-show="!showProcessingComment" @click="comment()" class="btn-styled" style="font-size: 14px; width: 150px; height: 40px;">Submit comment</button>
+					<div v-show="showProcessingComment">
+						Please wait...
 					</div>
 				</div>
+			</div>
+			
+			<br>
+			<div v-show="!form.meta.archived" class="div-moved-in-style" style="border-color: red;">
+				<h2>Archive this request</h2>
+				<span>Only archive activity requests that will <span style="display: inline; font-weight: bold;">never</span> occur. Archiving a request will not delete it — archived requests can be unarchived later.</span>
 				<br>
-				<div v-if="form.general.is_fundraiser === 'yes'" class="div-moved-in-style">
-					<h2>Fundraiser Details</h2>
-					<span>This activity is a fundraiser</span>
+				<button @click="archive()" class="btn-styled" style="color: red; border-color: red;">Archive</button>
+			</div>
 
-					<!-- the different types of fundraisers -->
-					<div v-if="form.fundraiser.fundraiser_type === 'restaurant'" class="div-moved-in">
-						<h3>Restaurant Fundraiser</h3>
-						<span>Restaurant name: {{ form.fundraiser['restaurant-name'] }}</span>
-						<span>Restaurant address: {{ form.fundraiser['restaurant-address'] }}</span>
-					</div>
-					<div v-if="form.fundraiser.fundraiser_type === 'donation_drive'" class="div-moved-in">
-						<h3>Donation Drive Fundraiser</h3>
-						<span>Items to be collected: {{ form.fundraiser['donation_drive-items-to-be-collected'] }}</span>
-						<span>Organization recieving the items: {{ form.fundraiser['donation_drive-receiving-organization-information'] }}</span>
-						<span>How will items reach organization: {{ form.fundraiser['donation_drive-receiving-organization-delivery-plan'] }}</span>
-					</div>
-					<div v-if="form.fundraiser.fundraiser_type === 'food_sales'" class="div-moved-in">
-						<h3>Food Sales Fundraiser</h3>
-						<span>Product description: {{ form.fundraiser['food_sales-product-description'] }}</span>
-						<span>Product expected selling price: ${{ form.fundraiser['food_sales-expected-selling-price'] }}</span>
-						<span>Expected # of items sold: {{ form.fundraiser['food_sales-expected-items-sold'] }}</span>
-						<span>Expected income: ${{ form.fundraiser['food_sales-expected-income'] }}</span>
-						<span>Expected costs: ${{ form.fundraiser['food_sales-expected-costs'] }}</span>
-					</div>
-					<div v-if="form.fundraiser.fundraiser_type === 'product'" class="div-moved-in">
-						<h3>Non-Food Product Sales Fundraiser</h3>
-						<span>Product description: {{ form.fundraiser['product-product-description'] }}</span>
-						<span>Product expected selling price: ${{ form.fundraiser['product-expected-selling-price'] }}</span>
-						<span>Expected # of items sold: {{ form.fundraiser['product-expected-items-sold'] }}</span>
-						<span>Expected income: ${{ form.fundraiser['product-expected-income'] }}</span>
-						<span>Expected costs: ${{ form.fundraiser['product-expected-costs'] }}</span>
-					</div>
-					<div v-if="form.fundraiser.fundraiser_type === 'third_party_fundraiser'" class="div-moved-in">
-						<h3>Third-party/online Fundraiser</h3>
-						<span>Link to online fundraising page: {{ form.fundraiser['third_party_fundraiser-link'] }}</span>
-						<span>Agreed/signed with the following name: {{ form.fundraiser['third_party_fundraiser-e-signature'] }}</span>
-					</div>
-
-				</div>
-				<br>
-
-				<div v-if="form.general.event_on_campus === 'yes'" class="div-moved-in-style">
-					<h2>Campus Details</h2>
-					<span>This activity will occur on campus</span>
-					<span v-if="form.campus.setup_image">Setup Image: <a :href="'//' + form.campus.setup_image" target="_blank">{{ form.campus.setup_image }}</a></span>
-					<div class="div-moved-in">
-						<h3>Location information</h3>
-						<span>Location on campus: {{ form.campus.location_on_campus }}</span>
-						<br>
-						<span v-if="form.campus.cafeteria">Wants the cafeteria</span>
-						<span v-if="form.campus.classroom">Wants classroom(s)</span>
-						<div v-if="form.campus['classroom-extra-info']" class="div-moved-in" style="margin-top: 0; padding-top: 0; margin-bottom: 0; padding-bottom: 0;">
-							<span>{{ form.campus['classroom-extra-info'] }}</span>
-						</div>
-						<div v-if="form.campus.gym">
-							<span>Wants the gym (student's comments below)</span>
-							<div class="student-comments">
-								{{ form.campus['gym-extra-info'] }}
-							</div>
-						</div>
-						<span v-if="form.campus.library">Wants the library</span>
-						<span v-if="form.campus.theater">Wants the theater</span>
-						<span v-if="form.campus.ccc">Wants the College and Career Center</span>
-					</div>
-					<div class="div-moved-in">
-						<h3>Desired equipment</h3>
-						<span v-if="form.campus.cashboxes">Wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
-						<div v-if="form.campus.screens">
-							<span>Wants screens/projectors (student's comments below)</span>
-							<div class="student-comments">
-								{{ form.campus['screens-extra-info'] }}
-							</div>
-						</div>
-						<div v-if="form.campus.tables">
-							<span>Wants tables/chairs (student's comments below)</span>
-							<div class="student-comments">
-								{{ form.campus['tables-extra-info'] }}
-							</div>
-						</div>
-						<span v-if="form.campus.speakers">Wants speakers</span>
-					</div>
-					<div class="div-moved-in" v-if="form.campus.includes_food">
-						<h3>Food Involved</h3>
-						<span>Student's comments below</span>
-						<div class="student-comments">
-							{{ form.campus.includes_food_extra_info }}
-						</div>
-					</div>
-				</div>
-				<br>
-				<div class="div-moved-in-style">
-					<h2>Comments</h2>
-					<div v-show="form.meta.comments" style="border: 1px solid #ccc; border-radius: 6px;">
-						<div
-							v-for="comment of form.meta.comments" v-bind:key="comment.time"
-							style="border-bottom: 1px solid #ccc; padding: 18px 20px;"
-						>
-							<span style="font-size: 18px; font-weight: bold; display: inline;">{{ comment.who }}</span>
-							<span style="font-size: 14px; display: inline; margin-left: 14px; color: #555;">{{ new Date(comment.time).toLocaleDateString('en-US', {
-								year: 'numeric',
-								month: 'numeric',
-								day: 'numeric',
-								timeZone: 'America/Los_Angeles',
-								hour12: true,
-								hour: 'numeric',
-								minute: 'numeric',
-							}) }}</span>
-							<div>{{ comment.commentBody }}</div>
-						</div>
-					</div>
-					<div v-show="!form.meta.comments">
-						There are no comments
-					</div>
-					<br>
-					<br>
-					<div>
-						<h3>Add a new comment</h3>
-						<input type="text" v-model="commentName" placeholder="Your full name" class="text-input-styled">
-						<br><br>
-						<textarea v-model="commentBody" class="text-input-styled" placeholder="Type your comment here..." style="width: 80%; border: 1px solid #ccc; font-size: 16px; outline: none; box-shadow: none; border-radius: 8px; padding: 14px; height: 100px;"></textarea>
-						<br><br>
-						<div>
-							<input type="checkbox" v-model="shouldSendEmail" id="shouldSendEmail">
-							<label for="shouldSendEmail" style="margin-left: 10px;">Notify (by email) the requesters that someone has commented on their activity request</label>
-						</div>
-						<br>
-						<button v-show="!showProcessingComment" @click="comment()" class="btn-styled" style="font-size: 14px; width: 150px; height: 40px;">Submit comment</button>
-						<div v-show="showProcessingComment">
-							Please wait...
-						</div>
-					</div>
-				</div>
-				
-				<br>
-				<div v-show="!form.meta.archived" class="div-moved-in-style">
-					<h2>Archive this request</h2>
-					<span>Only archive activity requests that will <span style="display: inline; font-weight: bold;">never</span> occur. Archiving a request will not delete it — archived requests can be unarchived later.</span>
-					<br>
-					<button @click="archive()" class="btn-styled" style="color: red; border-color: red;">Archive</button>
-				</div>
-
-				<div v-show="form.meta.archived" class="div-moved-in-style">
-					<h2>Unarchive this request</h2>
-					<span>This activity request was archived on {{ new Date(form.meta.archived.time).toLocaleDateString('en-US', {
+			<div v-show="form.meta.archived" class="div-moved-in-style">
+				<h2>Unarchive this request</h2>
+				<span>This activity request was archived on {{ 
+					new Date(form.meta.archived.time).toLocaleDateString('en-US', {
 						year: 'numeric',
 						month: 'numeric',
 						day: 'numeric',
@@ -248,17 +239,17 @@
 						hour12: true,
 						hour: 'numeric',
 						minute: 'numeric',
-					}) }} by {{ form.meta.archived.who }}</span>
-					<br>
-					<span>Accidentally archived this activity request?</span>
-					<button @click="unarchive()" class="btn-styled">Unarchive</button>
-				</div>
-			</div>
-			<div v-else>
-				Loading... Please wait.
+					}) 
+				}} by {{ form.meta.archived.who }}</span>
+				<br>
+				<span>Accidentally archived this activity request?</span>
+				<button @click="unarchive()" class="btn-styled">Unarchive</button>
 			</div>
 		</div>
-		<div v-else>
+		<div v-show="!form.loaded">
+			Loading... Please wait.
+		</div>
+		<div v-show="!isValidForm">
 			This is not a valid form ID.
 		</div>
 	</div>
@@ -268,8 +259,12 @@
 <script>
 import { get, put, remove} from '@/utils';
 import { serverHost } from '@/constants';
+import Comment from './components/Comment.vue';
 
 export default {
+	components: {
+		Comment
+	},
 	data() {
 		return {
 			formId: this.$route.params.id,
@@ -319,6 +314,7 @@ export default {
 
 				if (!res.success && res.error === 'no_form_exists') {
 					this.isValidForm = false;
+					this.form.loaded = true;
 					return;
 				}
 
@@ -478,7 +474,7 @@ export default {
 	transition: box-shadow .2s ease;
 }
 
-.student-comments {
+.student-comment {
 	margin-left: 14px;
 	border: 1px solid #ccc;
 	border-radius: 4px;

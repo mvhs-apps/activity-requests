@@ -74,7 +74,7 @@ router.post('/submit-request', async (req, res) => {
 	// TODO: idk maybe add some more validation???
 
 	let f = form.general;
-	if (!f.student_name || !f.activity_name || !f.club_name || !emailRegEx.test(f.student_email) || !emailRegEx.test(f.advisor_email) || !f.event_description || !f.start_date || !f.all_dates || !req.body.recaptchaToken) {
+	if (!f.student_name || !f.activity_name || !f.organization_name || !emailRegEx.test(f.student_email) || !emailRegEx.test(f.advisor_email) || !f.event_description || !f.start_date || !f.all_dates || !req.body.recaptchaToken) {
 		return res.json(responses.error('bad_information'));
 	}
 

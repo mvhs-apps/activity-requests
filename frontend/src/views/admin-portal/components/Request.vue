@@ -13,8 +13,8 @@
             <span style="float: right; font-weight: bold; font-size: 14px; color: red;" v-else>NOT ADMIN APPROVED</span>
         </div>
         <p>Submitted by: {{ form.general.student_name }}</p>
-        <p v-if="form.general.event_on_campus === 'yes' && form.campus['location_on_campus'] != 'not_applicable'">
-            Location: {{ form.campus['location_on_campus'] }}
+        <p v-if="form.general.event_on_campus === 'yes' && form.campus.location_on_campus != 'other'">
+            Location: {{ form.campus.location_on_campus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
         </p>
         <p>
             Activity starts on: {{ (new Date(form.general.start_date)).toLocaleDateString('en-US', {

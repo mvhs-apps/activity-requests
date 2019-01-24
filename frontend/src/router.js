@@ -8,6 +8,7 @@ import FormPage from './views/FormPage.vue';
 import ViewFormPage from './views/ViewFormPage.vue';
 import BadBrowserPage from './views/BadBrowserPage.vue';
 import FormSubmittedPage from './views/FormSubmittedPage.vue';
+import FormErrorPage from './views/FormErrorPage.vue';
 import LoginPage from './views/admin-portal/LoginPage.vue';
 import AllRequestsPage from './views/admin-portal/AllRequestsPage.vue';
 import PasswordsPage from './views/admin-portal/PasswordsPage.vue';
@@ -59,6 +60,14 @@ let router = new Router({
 			component: FormSubmittedPage,
 			meta: {
 				title: 'Form Submitted - Activity Requests'
+			}
+		},
+		{
+			path: '/form-error/:error',
+			name: 'form-error',
+			component: FormErrorPage,
+			meta: {
+				title: 'Form Error - Activity Requests'
 			}
 		},
 		{

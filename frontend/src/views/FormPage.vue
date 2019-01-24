@@ -162,7 +162,6 @@
 						</div>
 						<select v-model="form.campus.location_on_campus">
 							<option value="select_one" disabled>Select one</option>
-							<option value="not_applicable">Already answered above</option>
 							<option value="tennis_court_1">Tennis Court #1</option>
 							<option value="tennis_court_2">Tennis Court #2</option>
 							<option value="tennis_court_3">Tennis Court #3</option>
@@ -181,13 +180,18 @@
 							<option value="science_quad">Science Quad</option>
 							<option value="soccer_field_1">Soccer Field #1</option>
 							<option value="soccer_field_2">Soccer Field #2</option>
-							<option value="multi_use_field">Multi-Use Field</option>
+							<option value="multi_use_field">Multi-Use (Turf) Field</option>
+							<option value="small_gym">Small Gym</option>
+							<option value="big_gym">Big Gym</option>
 							<option value="100_wing">100 Wing</option>
 							<option value="200_wing">200 Wing</option>
 							<option value="300_wing">300 Wing</option>
 							<option value="400_wing">400 Wing</option>
 							<option value="500_wing">500 Wing</option>
 							<option value="600_wing">600 Wing</option>
+							<option value="staff_parking_lot">Staff Parking Lot</option>
+							<option value="student_parking_lot">Student Parking Lot (BPL)</option>
+							<option value="other">Other</option>
 						</select>
 					</div>
 				</div>
@@ -546,6 +550,10 @@ export default {
 				if (res.success) {
 					this.$router.push({
 						path: '/form-submitted/' + res.data
+					});
+				} else {
+					this.$router.push({
+						path: '/form-error/' + res.error
 					});
 				}
 			}).catch(err => console.log(err));
