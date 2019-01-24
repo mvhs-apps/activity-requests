@@ -182,7 +182,73 @@
 						</div>
 					</div>
 				</div>
+				<br>
+				<div class="div-moved-in-style">
+					<h2>Comments</h2>
+					<div v-show="form.meta.comments" style="border: 1px solid #ccc; border-radius: 6px;">
+						<div
+							v-for="comment of form.meta.comments" v-bind:key="comment.time"
+							style="border-bottom: 1px solid #ccc; padding: 18px 20px;"
+						>
+							<span style="font-size: 18px; font-weight: bold; display: inline;">{{ comment.who }}</span>
+							<span style="font-size: 14px; display: inline; margin-left: 14px; color: #555;">{{ new Date(comment.time).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'numeric',
+								day: 'numeric',
+								timeZone: 'America/Los_Angeles',
+								hour12: true,
+								hour: 'numeric',
+								minute: 'numeric',
+							}) }}</span>
+							<div>{{ comment.commentBody }}</div>
+						</div>
+					</div>
+					<div v-show="!form.meta.comments">
+						There are no comments
+					</div>
+					<br>
+					<br>
+					<div>
+						<h3>Add a new comment</h3>
+						<input type="text" v-model="commentName" placeholder="Your name" class="text-input-styled">
+						<br><br>
+						<textarea v-model="commentBody" placeholder="Type your comment here..." style="width: 80%; border: 1px solid #ccc; font-size: 14px; outline: none; box-shadow: none; border-radius: 8px; padding: 10px; height: 100px;"></textarea>
+						<br><br>
+						<div>
+							<input type="checkbox" v-model="shouldSendEmail" id="shouldSendEmail">
+							<label for="shouldSendEmail" style="margin-left: 10px;">Notify the requesters that someone has commented on their activity request</label>
+						</div>
+						<br>
+						<button v-show="!showProcessingComment" @click="comment()" class="btn-styled" style="font-size: 14px; width: 150px; height: 40px;">Submit comment</button>
+						<div v-show="showProcessingComment">
+							Please wait...
+						</div>
+					</div>
+				</div>
+				
+				<br>
+				<div v-show="!form.meta.archived" class="div-moved-in-style">
+					<h2>Archive this request</h2>
+					<span>Only archive activity requests that will <span style="display: inline; font-weight: bold;">never</span> occur. Archiving a request will not delete it — archived requests can be unarchived later.</span>
+					<br>
+					<button @click="archive()" class="btn-styled" style="color: red; border-color: red;">Archive</button>
+				</div>
 
+				<div v-show="form.meta.archived" class="div-moved-in-style">
+					<h2>Unarchive this request</h2>
+					<span>This activity request was archived on {{ new Date(form.meta.archived.time).toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'numeric',
+						day: 'numeric',
+						timeZone: 'America/Los_Angeles',
+						hour12: true,
+						hour: 'numeric',
+						minute: 'numeric',
+					}) }} by {{ form.meta.archived.who }}</span>
+					<br>
+					<span>Accidentally archived this activity request?</span>
+					<button @click="unarchive()" class="btn-styled">Unarchive</button>
+				</div>
 			</div>
 			<div v-else>
 				Loading... Please wait.
@@ -209,6 +275,10 @@ export default {
 			showProcessingApproval: false,
 			approvePassword: '',
 			approveName: '',
+			commentName: '',
+			commentBody: '',
+			showProcessingComment: false,
+			shouldSendEmail: false,
 			form: {
 				loaded: false,
 				student_email: ''
@@ -260,6 +330,7 @@ export default {
 
 			window.document.title = this.form.general.activity_name + ' - Activity Requests';
 			this.showProcessingApproval = false;
+			this.showProcessingComment = false;
 		},
 		async approve() {
 			let password = this.approvePassword;
@@ -307,6 +378,65 @@ export default {
 			res = await res.json();
 			
 			this.badPassword = (res.error === 'bad_password') ? true : false;
+			remove('all-forms');
+			remove(this.formId);
+			this.loadData();
+		},
+		async comment() {
+			let who = this.commentName;
+			let commentBody = this.commentBody;
+			let sendEmail = this.shouldSendEmail;
+			this.commentName = '';
+			this.commentBody = '';
+			this.shouldSendEmail = false;
+			this.showProcessingComment = true;
+
+			let res = await window.fetch(`${serverHost}/api/comment/${this.formId}`, {
+				method: 'POST',
+				body: JSON.stringify({
+					who,
+					commentBody,
+					sendEmail
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			res = await res.json();
+
+			remove('all-forms');
+			remove(this.formId);
+			this.loadData();
+		},
+		async archive() {
+			let res = await window.fetch(`${serverHost}/api/archive/${this.formId}`, {
+				method: 'POST',
+				body: JSON.stringify({
+					who: prompt('What is your name?', 'Your name here')
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			res = await res.json();
+
+			remove('all-forms');
+			remove(this.formId);
+			this.loadData();
+		},
+		async unarchive() {
+			let res = await window.fetch(`${serverHost}/api/unarchive/${this.formId}`, {
+				method: 'POST',
+				body: '{}',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			res = await res.json();
+
 			remove('all-forms');
 			remove(this.formId);
 			this.loadData();

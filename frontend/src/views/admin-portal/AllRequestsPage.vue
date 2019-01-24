@@ -12,6 +12,7 @@
             <a @click="loadByDateSubmitted()">Show all</a>
             <a @click="loadOnlyApproved()">Show approved</a>
             <a @click="loadOnlyUnapproved()">Show unapproved</a>
+            <a @click="loadOnlyArchived()">Show archived</a>
             <a @click="sortByClubName()">Sort by club name</a>
         </div>
         <div>
@@ -41,13 +42,16 @@ export default {
     },
     methods: {
         loadByDateSubmitted() {
-            this.formsToDisplay = this.getSortedForms();
+            this.formsToDisplay = this.getSortedForms().filter(form => !form.meta.archived);
         },
         loadOnlyApproved() {
-            this.formsToDisplay = this.getSortedForms().filter(form => form.meta.approved.admin);
+            this.formsToDisplay = this.getSortedForms().filter(form => !form.meta.archived && form.meta.approved.admin);
         },
         loadOnlyUnapproved() {
-            this.formsToDisplay = this.getSortedForms().filter(form => !form.meta.approved.admin);
+            this.formsToDisplay = this.getSortedForms().filter(form => !form.meta.archived && !form.meta.approved.admin);
+        },
+        loadOnlyArchived() {
+            this.formsToDisplay = this.getSortedForms().filter(form => form.meta.archived);
         },
         sortByClubName() {
             this.formsToDisplay = this.getSortedForms().sort((a, b) => {

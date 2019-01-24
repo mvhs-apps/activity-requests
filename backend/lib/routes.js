@@ -186,7 +186,7 @@ router.post('/unapprove/:id', async (req, res) => {
 
 	let dept = await getDeptFromPassword(password);
 
-	if (dept && await doesFormExist(id)) {
+	if (dept) {
 		firebase.database().ref(`/requests/${id}/meta/approved/${dept}`).set(false);
 
 		await sendRequestChangedEmails(id, form);
@@ -195,6 +195,63 @@ router.post('/unapprove/:id', async (req, res) => {
 	}
 
 	res.json(responses.error('bad_password'));
+});
+
+
+router.post('/comment/:id', async (req, res) => {
+	let id = req.params.id;
+	let who = req.body.who;
+	let commentBody = req.body.commentBody;
+	console.log(req.body);
+	let form = await getForm(id);
+	
+	if (!form || !who || !commentBody) {
+		return res.json(responses.error('bad_form'));
+	}
+
+	let comments = form.meta.comments || [];
+	comments.push({
+		time: Date.now(),
+		who,
+		commentBody
+	});
+
+	firebase.database().ref(`/requests/${id}/meta/comments`).set(comments);
+
+	if (req.body.sendEmail)
+		await sendRequestChangedEmails(id, form);
+
+	res.json(responses.success());
+});
+
+router.post('/archive/:id', async (req, res) => {
+	let id = req.params.id;
+	let who = req.body.who;
+	let form = await getForm(id);
+
+	if (!form || !who) {
+		return res.json(responses.error('bad_form'));
+	}
+
+	firebase.database().ref(`/requests/${id}/meta/archived`).set({
+		time: Date.now(),
+		who
+	});
+
+	res.json(responses.success());
+});
+
+router.post('/unarchive/:id', async (req, res) => {
+	let id = req.params.id;
+	let form = await getForm(id);
+
+	if (!form) {
+		return res.json(responses.error('bad_form'));
+	}
+
+	firebase.database().ref(`/requests/${id}/meta/archived`).set(false);
+
+	res.json(responses.success());
 });
 
 router.post('/get-all-requests', async (req, res) => {
