@@ -25,7 +25,7 @@
                 timeZone: 'America/Los_Angeles',
             }) }}
         </p>
-        <p>Organization name: {{ form.general.club_name }}</p>
+        <p>Organization name: {{ form.general.organization_name }}</p>
         <p>Submitted on: {{ (new Date(form.meta.date_submitted)).toLocaleDateString('en-US', {
                 //weekday: 'long',
                 year: 'numeric',
