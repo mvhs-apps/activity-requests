@@ -2,6 +2,8 @@
     <div style="height: 100%;">
         <h1>Help</h1>
         <br>
+        <p>Remember, it is your repsonsiblity to contact the necessary parties/departments and ask them to approve your activity request.</p>
+        <br>
         <div id="main-iframe">
             <div>
                 <a 

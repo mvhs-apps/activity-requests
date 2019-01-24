@@ -22,7 +22,7 @@
 					<span>Student requester: {{ form.general.student_name }}</span>
 					<span>Student email: {{ form.general.student_email }}</span>
 					<span>Adult advisor email: {{ form.general.advisor_email }}</span>
-					<span>Club name: {{ form.general.club_name }}</span>
+					<span>Organization name: {{ form.general.organization_name }}</span>
 					<span>Description:</span>
 					<div class="student-comments">
 						{{ form.general.event_description }}
@@ -35,7 +35,10 @@
 							timeZone: 'America/Los_Angeles',
 						}) }}
 					</span>
-					<span>Other Dates &amp; Times: {{ form.general.all_dates }}</span>
+					<span>Other Dates &amp; Times:</span>
+					<div class="student-comments">
+						{{ form.general.all_dates }}
+					</div>
 				</div>
 				<br>
 				<div id="approved-area" class="div-moved-in-style">
@@ -85,8 +88,8 @@
 							<input type="text" v-model="approveName" placeholder="Your full name" class="text-input-styled" style="margin-right: 10px;">
 							<input type="password" v-model="approvePassword" placeholder="Department password" class="text-input-styled">
 							<br><br>
-							<button @click="approve()" class="btn-styled" style="font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Approve</button>
-							<button @click="unapprove()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline; border-radius: 0;">Unapprove</button>
+							<button @click="approve()" class="btn-styled" style="font-size: 14px; width: 100px; height: 50px; display: inline;">Approve</button>
+							<button @click="unapprove()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline;">Unapprove</button>
 							<br>
 							<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
 						</div>
@@ -133,6 +136,7 @@
 					</div>
 
 				</div>
+				<br>
 
 				<div v-if="form.general.event_on_campus === 'yes'" class="div-moved-in-style">
 					<h2>Campus Details</h2>
@@ -210,13 +214,13 @@
 					<br>
 					<div>
 						<h3>Add a new comment</h3>
-						<input type="text" v-model="commentName" placeholder="Your name" class="text-input-styled">
+						<input type="text" v-model="commentName" placeholder="Your full name" class="text-input-styled">
 						<br><br>
-						<textarea v-model="commentBody" placeholder="Type your comment here..." style="width: 80%; border: 1px solid #ccc; font-size: 14px; outline: none; box-shadow: none; border-radius: 8px; padding: 10px; height: 100px;"></textarea>
+						<textarea v-model="commentBody" class="text-input-styled" placeholder="Type your comment here..." style="width: 80%; border: 1px solid #ccc; font-size: 16px; outline: none; box-shadow: none; border-radius: 8px; padding: 14px; height: 100px;"></textarea>
 						<br><br>
 						<div>
 							<input type="checkbox" v-model="shouldSendEmail" id="shouldSendEmail">
-							<label for="shouldSendEmail" style="margin-left: 10px;">Notify the requesters that someone has commented on their activity request</label>
+							<label for="shouldSendEmail" style="margin-left: 10px;">Notify (by email) the requesters that someone has commented on their activity request</label>
 						</div>
 						<br>
 						<button v-show="!showProcessingComment" @click="comment()" class="btn-styled" style="font-size: 14px; width: 150px; height: 40px;">Submit comment</button>
@@ -357,6 +361,8 @@ export default {
 			remove('all-forms');
 			remove(this.formId);
 			this.loadData();
+
+			alert('We notified (by email) the requestors that you have approved their activity');
 		},
 		async unapprove() {
 			let password = this.approvePassword;
@@ -381,6 +387,8 @@ export default {
 			remove('all-forms');
 			remove(this.formId);
 			this.loadData();
+
+			alert('We notified (by email) the requestors that you have unapproved their activity');
 		},
 		async comment() {
 			let who = this.commentName;

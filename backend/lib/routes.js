@@ -83,7 +83,8 @@ router.post('/submit-request', async (req, res) => {
 		date_submitted: Date.now(),
 		approved: {
 			admin: false
-		}
+		},
+		archived: false
 	}
 
 	// verify the recaptcha
@@ -202,7 +203,6 @@ router.post('/comment/:id', async (req, res) => {
 	let id = req.params.id;
 	let who = req.body.who;
 	let commentBody = req.body.commentBody;
-	console.log(req.body);
 	let form = await getForm(id);
 	
 	if (!form || !who || !commentBody) {

@@ -2,6 +2,8 @@
     <div>
         <h1>Your request was submitted!</h1>
         <br>
+        <h3>Remember: it is your repsonsiblity to contact the necessary parties/departments and ask them to approve your activity request</h3>
+        <br>
         <p>You can expect an email sent to you with necessary information.</p>
         <br>
         <p>The ID of your request is:</p>

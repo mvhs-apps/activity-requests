@@ -13,16 +13,28 @@
             <span style="float: right; font-weight: bold; font-size: 14px; color: red;" v-else>NOT ADMIN APPROVED</span>
         </div>
         <p>Submitted by: {{ form.general.student_name }}</p>
-        <p>Club name: {{ form.general.club_name }}</p>
+        <p v-if="form.general.event_on_campus === 'yes' && form.campus['location_on_campus'] != 'not_applicable'">
+            Location: {{ form.campus['location_on_campus'] }}
+        </p>
+        <p>
+            Activity starts on: {{ (new Date(form.general.start_date)).toLocaleDateString('en-US', {
+                //weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'America/Los_Angeles',
+            }) }}
+        </p>
+        <p>Organization name: {{ form.general.club_name }}</p>
         <p>Submitted on: {{ (new Date(form.meta.date_submitted)).toLocaleDateString('en-US', {
-            //weekday: 'long',
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            timeZone: 'America/Los_Angeles',
-            hour12: true,
-            hour: 'numeric',
-            minute: 'numeric',
+                //weekday: 'long',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                timeZone: 'America/Los_Angeles',
+                hour12: true,
+                hour: 'numeric',
+                minute: 'numeric',
             }) }}
         </p>
     </div>

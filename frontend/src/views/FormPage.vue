@@ -22,8 +22,8 @@
 				</div>
 				<div class="input-area">
 					<div class="text-input">
-						<span class="input-title">Club Name</span>
-						<input type="text" v-model="form.general.club_name" placeholder="Type here">
+						<span class="input-title">Organization Name</span>
+						<input type="text" v-model="form.general.organization_name" placeholder="Type here">
 					</div>
 				</div>
 				<div class="input-area">
@@ -37,7 +37,7 @@
 				</div>
 				<div class="input-area">
 					<div class="text-input">
-						<span class="input-title">Club Advisor Email</span>
+						<span class="input-title">Adult Advisor Email</span>
 						<input type="text" v-model.trim="form.general.advisor_email" placeholder="MVLA email">
 						<span class="feedback" style="color: #d50000;"
 							v-show="form.general.advisor_email && !emailRegEx.test(form.general.advisor_email)"
@@ -447,7 +447,7 @@ export default {
 				general: {
 					student_name: '',
 					activity_name: '',
-					club_name: '',
+					organization_name: '',
 					student_email: '',
 					advisor_email: '',
 					event_description: '',
@@ -509,7 +509,7 @@ export default {
 
 			// validation
 			let f = this.form.general;
-			if (!f.student_name || !f.activity_name || !f.club_name || !f.student_email || !f.advisor_email || !f.event_description || !f.start_date || !f.all_dates) {
+			if (!f.student_name || !f.activity_name || !f.organization_name || !f.student_email || !f.advisor_email || !f.event_description || !f.start_date || !f.all_dates) {
 				this.validationHTML = 'You must complete all fields in the \'General Information\' category';
 				return this.scrollUp();
 			}

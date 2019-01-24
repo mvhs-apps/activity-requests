@@ -14,6 +14,7 @@
             <a @click="loadOnlyUnapproved()">Show unapproved</a>
             <a @click="loadOnlyArchived()">Show archived</a>
             <a @click="sortByClubName()">Sort by club name</a>
+            <a @click="sortByStartDate()">Sort by start date</a>
         </div>
         <div>
             <Request
@@ -52,6 +53,14 @@ export default {
         },
         loadOnlyArchived() {
             this.formsToDisplay = this.getSortedForms().filter(form => form.meta.archived);
+        },
+        sortByStartDate() {
+            this.formsToDisplay = this.getSortedForms().sort((a, b) => {
+                a.general.start_date = Date.parse(a.general.start_date);
+                b.general.start_date = Date.parse(b.general.start_date);
+
+                return b.general.start_date - a.general.start_date;
+            });
         },
         sortByClubName() {
             this.formsToDisplay = this.getSortedForms().sort((a, b) => {
