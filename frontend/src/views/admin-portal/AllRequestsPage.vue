@@ -13,7 +13,7 @@
             <a @click="loadOnlyApproved()">Show approved</a>
             <a @click="loadOnlyUnapproved()">Show unapproved</a>
             <a @click="loadOnlyArchived()">Show archived</a>
-            <a @click="sortByClubName()">Sort by club name</a>
+            <a @click="sortByOrgName()">Sort by org name</a>
             <a @click="sortByStartDate()">Sort by start date</a>
         </div>
         <div>
@@ -56,16 +56,19 @@ export default {
         },
         sortByStartDate() {
             this.formsToDisplay = this.getSortedForms().sort((a, b) => {
-                a.general.start_date = Date.parse(a.general.start_date);
-                b.general.start_date = Date.parse(b.general.start_date);
+
+                if (typeof a.general.start_date !== 'number')
+                    a.general.start_date = Date.parse(a.general.start_date);
+                if (typeof b.general.start_date !== 'number')
+                    b.general.start_date = Date.parse(b.general.start_date);
 
                 return b.general.start_date - a.general.start_date;
             });
         },
-        sortByClubName() {
+        sortByOrgName() {
             this.formsToDisplay = this.getSortedForms().sort((a, b) => {
-                let aName = a.general.club_name.toLowerCase();
-                let bName = b.general.club_name.toLowerCase();
+                let aName = a.general.organization_name.toLowerCase();
+                let bName = b.general.organization_name.toLowerCase();
 
                 if (aName > bName) {
                     return 1;

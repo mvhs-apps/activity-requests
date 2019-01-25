@@ -189,6 +189,10 @@
 							<option value="400_wing">400 Wing</option>
 							<option value="500_wing">500 Wing</option>
 							<option value="600_wing">600 Wing</option>
+							<option value="theater">Theater</option>
+							<option value="cafeteria">Cafeteria</option>
+							<option value="library">Library</option>
+							<option value="college_and_career_center">College and Career Center</option>
 							<option value="staff_parking_lot">Staff Parking Lot</option>
 							<option value="student_parking_lot">Student Parking Lot (BPL)</option>
 							<option value="other">Other</option>

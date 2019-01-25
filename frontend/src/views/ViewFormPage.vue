@@ -190,17 +190,18 @@
 			<br>
 			<div class="div-moved-in-style">
 				<h2>Comments</h2>
-				<div v-show="form.meta.comments" style="border: 1px solid #ccc; border-radius: 6px;">
+				<div v-if="form.meta.comments" style="border: 1px solid #ccc; border-radius: 6px;">
 					<Comment
 						v-for="comment of form.meta.comments"
 						v-bind:key="comment.time"
 						v-bind:comment="comment"
 					/>
 				</div>
-				<div v-show="!form.meta.comments">
+				<div v-else>
 					There are no comments
 				</div>
 				<br>
+				<span v-if="form.meta.comments" style="margin-left: 10px;">{{ form.meta.comments.length }} comment(s)</span>
 				<br>
 				<div>
 					<h3>Add a new comment</h3>
@@ -223,7 +224,7 @@
 			<br>
 			<div v-show="!form.meta.archived" class="div-moved-in-style" style="border-color: red;">
 				<h2>Archive this request</h2>
-				<span>Only archive activity requests that will <span style="display: inline; font-weight: bold;">never</span> occur. Archiving a request will not delete it — archived requests can be unarchived later.</span>
+				<span>Only archive activity requests that will <span style="display: inline; font-weight: bold;">never</span> occur. Archiving a request will not delete it — archived requests can be unarchived if needed.</span>
 				<br>
 				<button @click="archive()" class="btn-styled" style="color: red; border-color: red;">Archive</button>
 			</div>
@@ -277,7 +278,7 @@ export default {
 			commentName: '',
 			commentBody: '',
 			showProcessingComment: false,
-			shouldSendEmail: false,
+			shouldSendEmail: true,
 			form: {
 				loaded: false,
 				student_email: ''

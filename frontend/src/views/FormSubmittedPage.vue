@@ -11,7 +11,7 @@
         <span style="display:inline; background: #ddd; padding: 6px 10px; border-radius: 4px;">{{ this.$route.params.id }}</span>
         <br>
         <br>
-        <p>Keep this ID safe! If you lose this ID, you will have to restart</p>
+        <p>Keep this ID safe! If you lose this ID, you might have to restart</p>
     </div>
 </template>
 

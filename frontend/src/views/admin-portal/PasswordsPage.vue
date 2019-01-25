@@ -16,6 +16,7 @@
             <option value="library">Library</option>
             <option value="ccc">College and Career Center</option>
             <option value="gym">Athletics/PE department (gym)</option>
+            <option value="theater">Theater</option>
             <option value="cafeteria">Food Service Department (cafeteria)</option>
         </select>
         <br><br>
