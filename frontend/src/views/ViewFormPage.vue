@@ -87,8 +87,8 @@
 						<input type="text" v-model="approveName" placeholder="Your full name" class="text-input-styled" style="margin-right: 10px;">
 						<input type="password" v-model="approvePassword" placeholder="Department password" class="text-input-styled">
 						<br><br>
-						<button @click="approve()" class="btn-styled" style="font-size: 14px; width: 100px; height: 50px; display: inline;">Approve</button>
-						<button @click="unapprove()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 50px; display: inline;">Unapprove</button>
+						<button @click="approve()" class="btn-styled" style="font-size: 14px; width: 100px; height: 35px; display: inline;">Approve</button>
+						<button @click="unapprove()" class="btn-styled" style="margin-left: 14px; font-size: 14px; width: 100px; height: 35px; display: inline;">Unapprove</button>
 						<br>
 						<span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; color: red; font-weight: bold; font-size: 14px;">Your password is incorrect. Please try again</span>
 					</div>
