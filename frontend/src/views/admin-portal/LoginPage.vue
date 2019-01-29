@@ -5,6 +5,7 @@
         <input type="password" placeholder="Type here" v-model="password" class="text-input-styled">
         <br>
         <span v-show="badPassword" style="padding: 12px 0 0 4px; display: block; font-weight: bold; color: red; font-size: 16px;">Your password is incorrect</span>
+        <span v-show="isLoading" style="padding: 12px 0 0 4px; display: block; font-weight: bold; font-size: 16px;">Loading. Please wait...</span>
         <br>
 		<button class="btn-styled" @click="login()">Login</button>
         <br>
@@ -12,36 +13,38 @@
 </template>
 
 <script>
-import {serverHost} from '@/constants';
+import { serverHost } from '@/constants';
 import { put, get } from '@/utils.js';
 
 export default {
     data() {
         return {
             badPassword: false,
-            password: ''
+            password: '',
+            isLoading: false
         }
     },
     methods: {
         login() {
+            this.isLoading = true;
+
             window.fetch(`${serverHost}/api/check-password`, {
                 method: 'POST',
                 body: JSON.stringify({ password: this.password }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success) {
-                        put('password', this.password);
-                        this.$router.push({
-                            path: this.$route.query.continue || '/admin/all-requests'
-                        });
-                    } else {
-                        this.badPassword = true;
-                    }
-                });
+            }).then(res => res.json()).then(res => {
+                this.isLoading = false;
+                if (res.success) {
+                    put('password', this.password);
+                    this.$router.push({
+                        path: this.$route.query.continue || '/admin/all-requests'
+                    });
+                } else {
+                    this.badPassword = true;
+                }
+            });
         }
     },
     created() {
