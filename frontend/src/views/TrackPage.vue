@@ -24,7 +24,7 @@ export default {
 		goToPage() {
 			if (this.requestId.length === 40) {
 				this.$router.push({
-					path: '/form/' + this.requestId
+					path: '/request/' + this.requestId
 				});
 			}
 		}

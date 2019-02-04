@@ -122,7 +122,7 @@ router.post('/submit-request', async (req, res) => {
 				html: emails.newRequestAdvisor({
 					id,
 					studentName: form.general.student_name,
-					clubName: form.general.club_name,
+					clubName: form.general.organization_name,
 					activityName: form.general.activity_name
 				})
 			});

@@ -1,6 +1,6 @@
 <template>
     <div
-        @click="$router.push({ path: '/form/' + form.id })"
+        @click="$router.push({ path: '/request/' + form.id })"
         v-bind:class="'request ' + requestClass"
     >
         <div>

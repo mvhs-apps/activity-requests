@@ -5,7 +5,7 @@ import HomePage from './views/HomePage.vue'
 import TrackPage from './views/TrackPage.vue';
 import StartForm from './views/StartFormPage.vue';
 import FormPage from './views/FormPage.vue';
-import ViewFormPage from './views/ViewFormPage.vue';
+import ViewRequestPage from './views/ViewRequestPage.vue';
 import BadBrowserPage from './views/BadBrowserPage.vue';
 import FormSubmittedPage from './views/FormSubmittedPage.vue';
 import FormErrorPage from './views/FormErrorPage.vue';
@@ -75,13 +75,13 @@ let router = new Router({
 			name: 'track',
 			component: TrackPage,
 			meta: {
-				title: 'Track Form - Activity Requests'
+				title: 'Track Request - Activity Requests'
 			}
 		},
 		{
-			path: '/form/:id',
-			name: 'view-form',
-			component: ViewFormPage
+			path: '/request/:id',
+			name: 'view-request',
+			component: ViewRequestPage
 		},
 		{
 			path: '/admin',

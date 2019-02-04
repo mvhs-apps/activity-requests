@@ -10,12 +10,14 @@
 
 
 <style scoped>
-    h1 {
-		font-weight: bold;
-		font-size: 40px;
-	}
-    p {
-        margin: 0;
-        padding: 0;
-    }
+
+h1 {
+    font-weight: bold;
+    font-size: 40px;
+}
+p {
+    margin: 0;
+    padding: 0;
+}
+
 </style>
