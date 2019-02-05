@@ -162,6 +162,12 @@
 						</div>
 						<select v-model="form.campus.location_on_campus">
 							<option value="select_one" disabled>Select one</option>
+							<option value="theater">Theater</option>
+							<option value="cafeteria">Cafeteria</option>
+							<option value="library">Library</option>
+							<option value="college_and_career_center">College and Career Center</option>
+							<option value="staff_parking_lot">Staff Parking Lot</option>
+							<option value="student_parking_lot">Student Parking Lot (BPL)</option>
 							<option value="tennis_court_1">Tennis Court #1</option>
 							<option value="tennis_court_2">Tennis Court #2</option>
 							<option value="tennis_court_3">Tennis Court #3</option>
@@ -189,12 +195,6 @@
 							<option value="400_wing">400 Wing</option>
 							<option value="500_wing">500 Wing</option>
 							<option value="600_wing">600 Wing</option>
-							<option value="theater">Theater</option>
-							<option value="cafeteria">Cafeteria</option>
-							<option value="library">Library</option>
-							<option value="college_and_career_center">College and Career Center</option>
-							<option value="staff_parking_lot">Staff Parking Lot</option>
-							<option value="student_parking_lot">Student Parking Lot (BPL)</option>
 							<option value="other">Other</option>
 						</select>
 					</div>

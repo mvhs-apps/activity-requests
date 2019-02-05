@@ -23,9 +23,7 @@
 				<span>Adult advisor email: {{ form.general.advisor_email }}</span>
 				<span>Organization name: {{ form.general.organization_name }}</span>
 				<span>Description:</span>
-				<div class="student-comment">
-					{{ form.general.event_description }}
-				</div>
+				<div class="student-comment" v-html="textToHTML(form.general.event_description)"></div>
 				<span>Start Date: {{ new Date(form.general.start_date).toLocaleDateString('en-US', {
 						weekday: 'short',
 						year: 'numeric',
@@ -35,9 +33,7 @@
 					}) }}
 				</span>
 				<span>Other Dates &amp; Times:</span>
-				<div class="student-comment">
-					{{ form.general.all_dates }}
-				</div>
+				<div class="student-comment" v-html="textToHTML(form.general.all_dates)"></div>
 			</div>
 			<br>
 			<div id="approved-area" class="div-moved-in-style">
@@ -103,18 +99,27 @@
 				<!-- the different types of fundraisers -->
 				<div v-if="form.fundraiser.fundraiser_type === 'restaurant'" class="div-moved-in">
 					<h3>Restaurant Fundraiser</h3>
-					<span>Restaurant name: {{ form.fundraiser['restaurant-name'] }}</span>
-					<span>Restaurant address: {{ form.fundraiser['restaurant-address'] }}</span>
+					<span>Restaurant name:</span>
+					<div class="student-comment">
+						{{ form.fundraiser['restaurant-name'] }}
+					</div>
+					<span>Restaurant address:</span>
+					<div class="student-comment" v-html="textToHTML(form.fundraiser['restaurant-address'])"></div>
 				</div>
 				<div v-if="form.fundraiser.fundraiser_type === 'donation_drive'" class="div-moved-in">
 					<h3>Donation Drive Fundraiser</h3>
-					<span>Items to be collected: {{ form.fundraiser['donation_drive-items-to-be-collected'] }}</span>
-					<span>Organization recieving the items: {{ form.fundraiser['donation_drive-receiving-organization-information'] }}</span>
-					<span>How will items reach organization: {{ form.fundraiser['donation_drive-receiving-organization-delivery-plan'] }}</span>
+					<span>Items to be collected:</span>
+					<div class="student-comment" v-html="textToHTML(form.fundraiser['donation_drive-items-to-be-collected'])"></div>
+					<span>Organization recieving the items:</span>
+					<div class="student-comment" v-html="textToHTML(form.fundraiser['donation_drive-receiving-organization-information'])">
+					</div>
+					<span>How will items reach organization:</span>
+					<div class="student-comment" v-html="textToHTML(form.fundraiser['donation_drive-receiving-organization-delivery-plan'])"></div>
 				</div>
 				<div v-if="form.fundraiser.fundraiser_type === 'food_sales'" class="div-moved-in">
 					<h3>Food Sales Fundraiser</h3>
-					<span>Product description: {{ form.fundraiser['food_sales-product-description'] }}</span>
+					<span>Product description:</span>
+					<div class="student-comment" v-html="textToHTML(form.fundraiser['food_sales-product-description'])"></div>
 					<span>Product expected selling price: ${{ form.fundraiser['food_sales-expected-selling-price'] }}</span>
 					<span>Expected # of items sold: {{ form.fundraiser['food_sales-expected-items-sold'] }}</span>
 					<span>Expected income: ${{ form.fundraiser['food_sales-expected-income'] }}</span>
@@ -122,7 +127,8 @@
 				</div>
 				<div v-if="form.fundraiser.fundraiser_type === 'product'" class="div-moved-in">
 					<h3>Non-Food Product Sales Fundraiser</h3>
-					<span>Product description: {{ form.fundraiser['product-product-description'] }}</span>
+					<span>Product description:</span>
+					<div class="student-comment" v-html="textToHTML(form.fundraiser['product-product-description'])"></div>
 					<span>Product expected selling price: ${{ form.fundraiser['product-expected-selling-price'] }}</span>
 					<span>Expected # of items sold: {{ form.fundraiser['product-expected-items-sold'] }}</span>
 					<span>Expected income: ${{ form.fundraiser['product-expected-income'] }}</span>
@@ -130,8 +136,14 @@
 				</div>
 				<div v-if="form.fundraiser.fundraiser_type === 'third_party_fundraiser'" class="div-moved-in">
 					<h3>Third-party/online Fundraiser</h3>
-					<span>Link to online fundraising page: {{ form.fundraiser['third_party_fundraiser-link'] }}</span>
-					<span>Agreed/signed with the following name: {{ form.fundraiser['third_party_fundraiser-e-signature'] }}</span>
+					<span>Link to online fundraising page:</span>
+					<div class="student-comment">
+						{{ form.fundraiser['third_party_fundraiser-link'] }}
+					</div>
+					<span>Agreed/signed with the following name:</span>
+					<div class="student-comment">
+						{{ form.fundraiser['third_party_fundraiser-e-signature'] }}
+					</div>
 				</div>
 
 			</div>
@@ -140,11 +152,15 @@
 			<div v-if="form.general.event_on_campus === 'yes'" class="div-moved-in-style">
 				<h2>Campus Details</h2>
 				<span>This activity will occur on campus</span>
-				<span v-if="form.campus.setup_image">Setup Image: <a :href="form.campus.setup_image" target="_blank">{{ form.campus.setup_image }}</a></span>
+				<div v-if="form.campus.setup_image">
+					<span>Setup Image:</span>
+					<div class="student-comment">
+						<a :href="form.campus.setup_image" target="_blank">{{ form.campus.setup_image }}</a>
+					</div>
+				</div>
 				<div class="div-moved-in">
 					<h3>Location information</h3>
 					<span>Location on campus: {{ form.campus.location_on_campus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}</span>
-					<br>
 					<span v-if="form.campus.cafeteria">Wants the cafeteria</span>
 					<div v-if="form.campus.classroom">
 						<span>Wants classrooms(s) [student's comments below]</span>
@@ -167,24 +183,18 @@
 					<span v-if="form.campus.cashboxes">Wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
 					<div v-if="form.campus.screens">
 						<span>Wants screens/projectors (student's comments below)</span>
-						<div class="student-comment">
-							{{ form.campus['screens-extra-info'] }}
-						</div>
+						<div class="student-comment" v-html="textToHTML(form.campus['screens-extra-info'])"></div>
 					</div>
 					<div v-if="form.campus.tables">
 						<span>Wants tables/chairs (student's comments below)</span>
-						<div class="student-comment">
-							{{ form.campus['tables-extra-info'] }}
-						</div>
+						<div class="student-comment" v-html="textToHTML(form.campus['tables-extra-info'])"></div>
 					</div>
 					<span v-if="form.campus.speakers">Wants speakers</span>
 				</div>
 				<div class="div-moved-in" v-if="form.campus.includes_food">
 					<h3>Food Involved</h3>
 					<span>Student's comments below</span>
-					<div class="student-comment">
-						{{ form.campus.includes_food_extra_info }}
-					</div>
+					<div class="student-comment" v-html="textToHTML(form.campus.includes_food_extra_info)"></div>
 				</div>
 			</div>
 			<br>
@@ -445,6 +455,12 @@ export default {
 			remove('all-forms');
 			remove(this.formId);
 			this.loadData();
+		},
+		textToHTML(text) {
+			let div = document.createElement('div');
+			div.innerText = text;
+
+			return div.innerHTML;
 		}
 	},
 	created() {
