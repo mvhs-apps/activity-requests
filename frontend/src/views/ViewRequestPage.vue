@@ -113,7 +113,7 @@
 					<span>Organization recieving the items:</span>
 					<div class="student-comment" v-html="textToHTML(form.fundraiser['donation_drive-receiving-organization-information'])">
 					</div>
-					<span>How will items reach organization:</span>
+					<span>How items will reach the organization:</span>
 					<div class="student-comment" v-html="textToHTML(form.fundraiser['donation_drive-receiving-organization-delivery-plan'])"></div>
 				</div>
 				<div v-if="form.fundraiser.fundraiser_type === 'food_sales'" class="div-moved-in">

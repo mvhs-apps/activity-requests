@@ -50,7 +50,8 @@ function sendRequestChangedEmails(id, form) {
 		subject: 'Activity Request Changed',
 		html: emails.requestChanged({
 			id,
-			studentName: form.general.student_name
+			studentName: form.general.student_name,
+			activityName: form.general.activity_name
 		})
 	});
 }
