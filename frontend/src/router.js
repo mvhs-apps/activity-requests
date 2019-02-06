@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { page } from 'vue-analytics';
 import Router from 'vue-router'
 
 import HomePage from './views/HomePage.vue'
@@ -132,6 +133,10 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
 	if (to.meta.title) window.document.title = to.meta.title;
+
+	// google analytics
+	page(to.path);
+
 	next();
 });
 

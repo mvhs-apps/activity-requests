@@ -3,5 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "postinstall": "npm install --prefix backend"
+  },
+  "dependencies": {
+    "vue-analytics": "^5.16.2"
   }
 }
