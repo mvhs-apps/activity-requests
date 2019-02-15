@@ -13,13 +13,7 @@
             Location: {{ form.campus.location_on_campus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
         </p>
         <p>
-            Activity starts on: {{ (new Date(form.general.start_date)).toLocaleDateString('en-US', {
-                //weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                timeZone: 'America/Los_Angeles',
-            }) }}
+            Activity starts on: {{ startDate }}
         </p>
         <p>Organization name: {{ form.general.organization_name }}</p>
         <p>Submitted on: {{ (new Date(form.meta.date_submitted)).toLocaleDateString('en-US', {
@@ -42,6 +36,18 @@ export default {
     computed: {
         requestClass() {
             return this.form.meta.approved.admin ? 'approved' : 'unapproved';
+        },
+        startDate() {
+            let date = new Date(this.form.general.start_date);
+            date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+            
+            return date.toLocaleDateString('en-US', {
+                //weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'America/Los_Angeles',
+            })
         }
     }
 }

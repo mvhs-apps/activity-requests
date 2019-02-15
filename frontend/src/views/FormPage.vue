@@ -64,8 +64,13 @@
 				</div>
 				<div class="input-area">
 					<div class="text-input">
-						<span class="input-title" style="margin-bottom: 0;">Write all other dates (including times) of when your event will take place</span>
-						<span class="input-subtitle">Include the exact date, start time, and end time.</span>
+						<span class="input-title" style="margin-bottom: 0;">
+							Write all other dates (including times) of when your event will take place
+						</span>
+						<span class="input-subtitle">
+							For each date of the event, include the following information:<br>
+							Start time, end time, set-up time, and clean-up time
+						</span>
 						<textarea @focus="e => e.target.classList.add('expanded')" class="text-input" placeholder="Write here" v-model="form.general.all_dates"></textarea>
 					</div>
 				</div>
@@ -221,7 +226,7 @@
 							<div class="text-input">
 								<span class="input-title" style="margin-bottom: 0;">Please indicate the quantity of tables/chairs you need and how you will use them</span>
 								<span class="input-subtitle">No more than 100 chairs and 15 tables</span>
-								<textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.campus['tables-extra-info']" placeholder="Be specific, if possible"></textarea>											 
+								<textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.campus['tables-extra-info']" placeholder="Be specific, if possible"></textarea>
 							</div>
 						</div>
 						<div class="md-checkbox">
@@ -242,6 +247,16 @@
 						<div class="md-checkbox">
 							<input type="checkbox" v-model="form.campus.speakers" id="speakers-checkbox">
 							<label for="speakers-checkbox">Speakers</label>
+						</div>
+						<div class="md-checkbox">
+							<input type="checkbox" v-model="form.campus['other-equipment']" id="cashboxes-checkbox">
+							<label for="cashboxes-checkbox">Other Equipment</label>
+						</div>
+						<div class="input-area checkbox-extension" v-show="form.campus['other-equipment']">
+							<div class="text-input">
+								<span class="input-title" style="margin-bottom: 0;">What other equipment is desired?</span>
+								<textarea class="text-input" @focus="e => e.target.classList.add('expanded')" v-model="form.campus['other-equipment-extra-info']" placeholder="Be specific, if possible"></textarea>
+							</div>
 						</div>
 					</div>
 				</div>
