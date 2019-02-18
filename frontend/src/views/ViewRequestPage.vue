@@ -289,7 +289,7 @@ export default {
 			shouldSendEmail: true,
 			form: {
 				loaded: false,
-				requester_email: ''
+				requesters_email: ''
 			}
 		}
 	},
