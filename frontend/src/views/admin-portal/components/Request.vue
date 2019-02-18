@@ -8,7 +8,7 @@
             <span class="approved-symbol" v-if="form.meta.approved.admin">ADMIN APPROVED</span>
             <span class="approved-symbol" v-else>NOT ADMIN APPROVED</span>
         </div>
-        <p>Submitted by: {{ form.general.student_name }}</p>
+        <p>Submitted by: {{ form.general.requester_name }}</p>
         <p v-if="form.general.event_on_campus === 'yes' && form.campus.location_on_campus != 'other'">
             Location: {{ form.campus.location_on_campus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
         </p>

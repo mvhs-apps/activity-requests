@@ -45,12 +45,12 @@ async function getForm(id) {
 
 function sendRequestChangedEmails(id, form) {
 	return mailer({
-		to: form.general.student_email,
+		to: form.general.requester_email,
 		cc: form.general.advisor_email,
 		subject: 'Activity Request Changed',
 		html: emails.requestChanged({
 			id,
-			studentName: form.general.student_name,
+			requesterName: form.general.requester_name,
 			activityName: form.general.activity_name
 		})
 	});
@@ -75,7 +75,7 @@ router.post('/submit-request', async (req, res) => {
 	// TODO: idk maybe add some more validation???
 
 	let f = form.general;
-	if (!f.student_name || !f.activity_name || !f.organization_name || !emailRegEx.test(f.student_email) || !emailRegEx.test(f.advisor_email) || !f.event_description || !f.start_date || !f.all_dates || !req.body.recaptchaToken) {
+	if (!f.requester_name || !f.activity_name || !f.organization_name || !emailRegEx.test(f.requester_email) || !emailRegEx.test(f.advisor_email) || !f.event_description || !f.start_date || !f.all_dates || !req.body.recaptchaToken) {
 		return res.json(responses.error('bad_information'));
 	}
 
@@ -108,11 +108,11 @@ router.post('/submit-request', async (req, res) => {
 		} else {
 
 			let a = mailer({
-				to: form.general.student_email,
+				to: form.general.requester_email,
 				subject: 'Activity Request Submitted',
 				html: emails.newRequestStudent({
 					id,
-					studentName: form.general.student_name,
+					requesterName: form.general.requester_name,
 					activityName: form.general.activity_name
 				})
 			});
@@ -122,7 +122,7 @@ router.post('/submit-request', async (req, res) => {
 				subject: 'Activity Request Submitted',
 				html: emails.newRequestAdvisor({
 					id,
-					studentName: form.general.student_name,
+					requesterName: form.general.requester_name,
 					clubName: form.general.organization_name,
 					activityName: form.general.activity_name
 				})

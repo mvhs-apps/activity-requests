@@ -8,9 +8,9 @@
 				<div class="input-area">
 					<div class="text-input">
 						<span class="input-title">Your Name</span>
-						<input type="text" placeholder="First and last" v-model.trim="form.general.student_name">
+						<input type="text" placeholder="First and last" v-model.trim="form.general.requester_name">
 						<span class="feedback" style="color: #d50000;"
-							v-show="form.general.student_name && (!form.general.student_name.includes(' '))"
+							v-show="form.general.requester_name && (!form.general.requester_name.includes(' '))"
 						>First and last name, please</span>
 					</div>
 				</div>
@@ -29,9 +29,9 @@
 				<div class="input-area">
 					<div class="text-input">
 						<span class="input-title">Your Email</span>
-						<input type="text" v-model.trim="form.general.student_email" placeholder="MVLA email">
+						<input type="text" v-model.trim="form.general.requester_email" placeholder="MVLA email">
 						<span class="feedback" style="color: #d50000;"
-							v-show="form.general.student_email && (!form.general.student_email.includes('@mvla.net') || !emailRegEx.test(form.general.student_email))"
+							v-show="form.general.requester_email && (!form.general.requester_email.includes('@mvla.net') || !emailRegEx.test(form.general.requester_email))"
 						>Please enter a valid MVLA email</span>
 					</div>
 				</div>
@@ -468,10 +468,10 @@ export default {
 			recaptchaToken: '',
 			form: {
 				general: {
-					student_name: '',
+					requester_name: '',
 					activity_name: '',
 					organization_name: '',
-					student_email: '',
+					requester_email: '',
 					advisor_email: '',
 					event_description: '',
 					start_date: '',
@@ -532,7 +532,7 @@ export default {
 
 			// validation
 			let f = this.form.general;
-			if (!f.student_name || !f.activity_name || !f.organization_name || !f.student_email || !f.advisor_email || !f.event_description || !f.start_date || !f.all_dates) {
+			if (!f.requester_name || !f.activity_name || !f.organization_name || !f.requester_email || !f.advisor_email || !f.event_description || !f.start_date || !f.all_dates) {
 				this.validationHTML = 'You must complete all fields in the \'General Information\' category';
 				return this.scrollUp();
 			}

@@ -18,16 +18,16 @@
 			<br>
 			<div class="div-moved-in-style">
 				<h2>General Information</h2>
-				<span>Student requester: {{ form.general.student_name }}</span>
-				<span>Student email: {{ form.general.student_email }}</span>
+				<span>Requester name: {{ form.general.requester_name }}</span>
+				<span>Requester email: {{ form.general.requester_email }}</span>
 				<span>Adult advisor email: {{ form.general.advisor_email }}</span>
 				<span>Organization name: {{ form.general.organization_name }}</span>
 				<span>Description:</span>
-				<div class="requestor-comment" v-html="textToHTML(form.general.event_description)"></div>
+				<div class="requester-comment" v-html="textToHTML(form.general.event_description)"></div>
 				<span>Start Date: {{ startDate }}
 				</span>
 				<span>Other Dates &amp; Times:</span>
-				<div class="requestor-comment" v-html="textToHTML(form.general.all_dates)"></div>
+				<div class="requester-comment" v-html="textToHTML(form.general.all_dates)"></div>
 			</div>
 			<br>
 			<div id="approved-area" class="div-moved-in-style">
@@ -94,26 +94,26 @@
 				<div v-if="form.fundraiser.fundraiser_type === 'restaurant'" class="div-moved-in">
 					<h3>Restaurant Fundraiser</h3>
 					<span>Restaurant name:</span>
-					<div class="requestor-comment">
+					<div class="requester-comment">
 						{{ form.fundraiser['restaurant-name'] }}
 					</div>
 					<span>Restaurant address:</span>
-					<div class="requestor-comment" v-html="textToHTML(form.fundraiser['restaurant-address'])"></div>
+					<div class="requester-comment" v-html="textToHTML(form.fundraiser['restaurant-address'])"></div>
 				</div>
 				<div v-if="form.fundraiser.fundraiser_type === 'donation_drive'" class="div-moved-in">
 					<h3>Donation Drive Fundraiser</h3>
 					<span>Items to be collected:</span>
-					<div class="requestor-comment" v-html="textToHTML(form.fundraiser['donation_drive-items-to-be-collected'])"></div>
+					<div class="requester-comment" v-html="textToHTML(form.fundraiser['donation_drive-items-to-be-collected'])"></div>
 					<span>Organization recieving the items:</span>
-					<div class="requestor-comment" v-html="textToHTML(form.fundraiser['donation_drive-receiving-organization-information'])">
+					<div class="requester-comment" v-html="textToHTML(form.fundraiser['donation_drive-receiving-organization-information'])">
 					</div>
 					<span>How items will reach the organization:</span>
-					<div class="requestor-comment" v-html="textToHTML(form.fundraiser['donation_drive-receiving-organization-delivery-plan'])"></div>
+					<div class="requester-comment" v-html="textToHTML(form.fundraiser['donation_drive-receiving-organization-delivery-plan'])"></div>
 				</div>
 				<div v-if="form.fundraiser.fundraiser_type === 'food_sales'" class="div-moved-in">
 					<h3>Food Sales Fundraiser</h3>
 					<span>Product description:</span>
-					<div class="requestor-comment" v-html="textToHTML(form.fundraiser['food_sales-product-description'])"></div>
+					<div class="requester-comment" v-html="textToHTML(form.fundraiser['food_sales-product-description'])"></div>
 					<span>Product expected selling price: ${{ form.fundraiser['food_sales-expected-selling-price'] }}</span>
 					<span>Expected # of items sold: {{ form.fundraiser['food_sales-expected-items-sold'] }}</span>
 					<span>Expected income: ${{ form.fundraiser['food_sales-expected-income'] }}</span>
@@ -122,7 +122,7 @@
 				<div v-if="form.fundraiser.fundraiser_type === 'product'" class="div-moved-in">
 					<h3>Non-Food Product Sales Fundraiser</h3>
 					<span>Product description:</span>
-					<div class="requestor-comment" v-html="textToHTML(form.fundraiser['product-product-description'])"></div>
+					<div class="requester-comment" v-html="textToHTML(form.fundraiser['product-product-description'])"></div>
 					<span>Product expected selling price: ${{ form.fundraiser['product-expected-selling-price'] }}</span>
 					<span>Expected # of items sold: {{ form.fundraiser['product-expected-items-sold'] }}</span>
 					<span>Expected income: ${{ form.fundraiser['product-expected-income'] }}</span>
@@ -131,11 +131,11 @@
 				<div v-if="form.fundraiser.fundraiser_type === 'third_party_fundraiser'" class="div-moved-in">
 					<h3>Third-party/online Fundraiser</h3>
 					<span>Link to online fundraising page:</span>
-					<div class="requestor-comment">
+					<div class="requester-comment">
 						{{ form.fundraiser['third_party_fundraiser-link'] }}
 					</div>
 					<span>Agreed/signed with the following name:</span>
-					<div class="requestor-comment">
+					<div class="requester-comment">
 						{{ form.fundraiser['third_party_fundraiser-e-signature'] }}
 					</div>
 				</div>
@@ -148,7 +148,7 @@
 				<span>This activity will occur on campus</span>
 				<div v-if="form.campus.setup_image">
 					<span>Setup Image:</span>
-					<div class="requestor-comment">
+					<div class="requester-comment">
 						<a :href="form.campus.setup_image" target="_blank">{{ form.campus.setup_image }}</a>
 					</div>
 				</div>
@@ -157,14 +157,14 @@
 					<span>Location on campus: {{ form.campus.location_on_campus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}</span>
 					<span v-if="form.campus.cafeteria">Wants the cafeteria</span>
 					<div v-if="form.campus.classroom">
-						<span>Wants classrooms(s) [student's comments below]</span>
-						<div class="requestor-comment">
+						<span>Wants classrooms(s) [requester's comments below]</span>
+						<div class="requester-comment">
 							{{ form.campus['classroom-extra-info'] }}
 						</div>
 					</div>
 					<div v-if="form.campus.gym">
-						<span>Wants the gym (requestor's comments below)</span>
-						<div class="requestor-comment">
+						<span>Wants the gym (requester's comments below)</span>
+						<div class="requester-comment">
 							{{ form.campus['gym-extra-info'] }}
 						</div>
 					</div>
@@ -176,23 +176,23 @@
 					<h3>Desired equipment</h3>
 					<span v-if="form.campus.cashboxes">Wants {{ form.campus['cashboxes-extra-info'] }} cashboxes</span>
 					<div v-if="form.campus.screens">
-						<span>Wants screens/projectors (requestor's comments below)</span>
-						<div class="requestor-comment" v-html="textToHTML(form.campus['screens-extra-info'])"></div>
+						<span>Wants screens/projectors (requester's comments below)</span>
+						<div class="requester-comment" v-html="textToHTML(form.campus['screens-extra-info'])"></div>
 					</div>
 					<div v-if="form.campus.tables">
-						<span>Wants tables/chairs (requestor's comments below)</span>
-						<div class="requestor-comment" v-html="textToHTML(form.campus['tables-extra-info'])"></div>
+						<span>Wants tables/chairs (requester's comments below)</span>
+						<div class="requester-comment" v-html="textToHTML(form.campus['tables-extra-info'])"></div>
 					</div>
 					<span v-if="form.campus.speakers">Wants speakers</span>
 					<div v-if="form.campus['other-equipment']">
-						<span>Wants other equipment (requestor's comments below)</span>
-						<div class="requestor-comment" v-html="textToHTML(form.campus['other-equipment-info'])"></div>
+						<span>Wants other equipment (requester's comments below)</span>
+						<div class="requester-comment" v-html="textToHTML(form.campus['other-equipment-info'])"></div>
 					</div>
 				</div>
 				<div class="div-moved-in" v-if="form.campus.includes_food">
 					<h3>Food Involved</h3>
-					<span>Student's comments below</span>
-					<div class="requestor-comment" v-html="textToHTML(form.campus.includes_food_extra_info)"></div>
+					<span>Requester's comments below</span>
+					<div class="requester-comment" v-html="textToHTML(form.campus.includes_food_extra_info)"></div>
 				</div>
 			</div>
 			<br>
@@ -289,7 +289,7 @@ export default {
 			shouldSendEmail: true,
 			form: {
 				loaded: false,
-				student_email: ''
+				requester_email: ''
 			}
 		}
 	},
@@ -379,7 +379,7 @@ export default {
 			remove(this.formId);
 			this.loadData();
 
-			alert('We notified (by email) the requestors that you have approved their activity');
+			alert('We notified (by email) the requesters that you have approved their activity');
 		},
 		async unapprove() {
 			let password = this.approvePassword;
@@ -405,7 +405,7 @@ export default {
 			remove(this.formId);
 			this.loadData();
 
-			alert('We notified (by email) the requestors that you have unapproved their activity');
+			alert('We notified (by email) the requesters that you have unapproved their activity');
 		},
 		async comment() {
 			let who = this.commentName;
@@ -501,7 +501,7 @@ export default {
 	transition: box-shadow .2s ease;
 }
 
-.requestor-comment {
+.requester-comment {
 	margin-left: 14px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
