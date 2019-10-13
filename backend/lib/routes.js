@@ -1,5 +1,4 @@
 const firebase = require('firebase');
-const crypto = require('crypto');
 
 const fetch = require('node-fetch');
 const { URLSearchParams } = require('url');
@@ -18,7 +17,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 function generateId(length) {
-	return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
+	let chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+	let id = '';
+	for (let i = 0; i < length; i++) {
+		id += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return id;
 }
 
 async function getDeptFromPassword(password) {
@@ -70,7 +74,7 @@ router.get('/get-request/:id', (req, res) => {
 
 router.post('/submit-request', async (req, res) => {
 	let form = req.body.form;
-	let id = generateId(40);
+	let id = generateId(10);
 
 	// TODO: idk maybe add some more validation???
 
